@@ -1,0 +1,846 @@
+
+        // ==================== 银发模式切换 ====================
+        let silverModeActive = false;
+        function toggleSilverMode() {
+            silverModeActive = !silverModeActive;
+            document.body.classList.toggle('silver-mode', silverModeActive);
+            const btn = document.getElementById('silverModeBtn');
+            const icon = document.getElementById('silverModeIcon');
+            const text = document.getElementById('silverModeText');
+            if (silverModeActive) {
+                btn.classList.add('active');
+                icon.textContent = '🧓';
+                text.textContent = '退出银发模式';
+            } else {
+                btn.classList.remove('active');
+                icon.textContent = '🧓';
+                text.textContent = '银发模式';
+            }
+        }
+
+        // ==================== Tab切换 ====================
+        function switchTab(tab) {
+            ['recommend','pest','calendar','companion','devices','regrow','firstaid'].forEach(t => {
+                document.getElementById('panel-'+t).classList.add('hidden');
+                document.getElementById('tab-'+t).classList.remove('tab-active');
+                document.getElementById('tab-'+t).classList.add('tab-inactive');
+            });
+            document.getElementById('panel-'+tab).classList.remove('hidden');
+            document.getElementById('tab-'+tab).classList.remove('tab-inactive');
+            document.getElementById('tab-'+tab).classList.add('tab-active');
+            if(tab === 'devices') showDevices();
+            if(tab === 'regrow') showRegrow();
+            if(tab === 'firstaid') renderFirstaidCards();
+        }
+
+        // ==================== 智能推荐（扩充数据） ====================
+        const plantDB = {
+            'south-guangzhou-newbie-eat': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手建立信心',toxic:false},
+                {name:'空心菜',emoji:'🌿',difficulty:'⭐',cycle:'25-35天',tip:'耐湿热，广州夏季首选',toxic:false},
+                {name:'薄荷',emoji:'🍃',difficulty:'⭐',cycle:'全年可收',tip:'驱蚊+泡茶两用，极易养护',toxic:false},
+                {name:'番茄',emoji:'🍅',difficulty:'⭐⭐',cycle:'60-80天',tip:'需搭架，产量高',toxic:true,note:'⚠️ 茎叶有毒，果实安全'}
+            ],
+            'south-shenzhen-newbie-eat': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手',toxic:false},
+                {name:'空心菜',emoji:'🌿',difficulty:'⭐',cycle:'25-35天',tip:'耐湿热，深圳夏季首选',toxic:false},
+                {name:'薄荷',emoji:'🍃',difficulty:'⭐',cycle:'全年可收',tip:'驱蚊+泡茶两用',toxic:false},
+                {name:'辣椒',emoji:'🌶️',difficulty:'⭐⭐',cycle:'60-90天',tip:'喜热，产量高',toxic:false}
+            ],
+            'north-beijing-newbie-eat': [
+                {name:'生菜',emoji:'🥬',difficulty:'⭐',cycle:'40-50天',tip:'耐寒，春秋两季最佳',toxic:false},
+                {name:'菠菜',emoji:'🌿',difficulty:'⭐',cycle:'30-40天',tip:'耐低温，北京冬季可种',toxic:false},
+                {name:'小葱',emoji:'🧅',difficulty:'⭐',cycle:'20-30天',tip:'随吃随剪，再生能力强',toxic:false},
+                {name:'香菜',emoji:'🌿',difficulty:'⭐⭐',cycle:'30-40天',tip:'喜凉，春秋种植',toxic:false}
+            ],
+            'east-shanghai-newbie-eat': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手',toxic:false},
+                {name:'生菜',emoji:'🥬',difficulty:'⭐',cycle:'40-50天',tip:'春秋最佳，夏季需遮阴',toxic:false},
+                {name:'小葱',emoji:'🧅',difficulty:'⭐',cycle:'20-30天',tip:'随吃随剪，再生能力强',toxic:false},
+                {name:'草莓',emoji:'🍓',difficulty:'⭐⭐',cycle:'3-4月结果',tip:'酸甜可口，亲子首选',toxic:false}
+            ],
+            'east-hangzhou-newbie-eat': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手',toxic:false},
+                {name:'生菜',emoji:'🥬',difficulty:'⭐',cycle:'40-50天',tip:'春秋最佳，梅雨季注意排水',toxic:false},
+                {name:'小葱',emoji:'🧅',difficulty:'⭐',cycle:'20-30天',tip:'随吃随剪，再生能力强',toxic:false},
+                {name:'薄荷',emoji:'🍃',difficulty:'⭐',cycle:'全年可收',tip:'驱蚊+泡茶两用',toxic:false}
+            ],
+            'west-chengdu-newbie-eat': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手',toxic:false},
+                {name:'生菜',emoji:'🥬',difficulty:'⭐',cycle:'40-50天',tip:'春秋最佳，夏季凉爽',toxic:false},
+                {name:'辣椒',emoji:'🌶️',difficulty:'⭐⭐',cycle:'60-90天',tip:'喜热，成都夏季适宜',toxic:false},
+                {name:'香菜',emoji:'🌿',difficulty:'⭐⭐',cycle:'30-40天',tip:'喜凉，春秋种植',toxic:false}
+            ],
+            'north-shanghai-newbie-ornament': [
+                {name:'绿萝',emoji:'🌿',difficulty:'⭐',cycle:'多年生',tip:'散射光即可，新手首选',toxic:true,note:'⚠️ 汁液有毒，避免宠物误食'},
+                {name:'吊兰',emoji:'🌱',difficulty:'⭐',cycle:'多年生',tip:'净化空气，极易繁殖',toxic:false},
+                {name:'龟背竹',emoji:'🌿',difficulty:'⭐⭐',cycle:'多年生',tip:'ins风网红植物',toxic:true,note:'⚠️ 汁液有毒'},
+                {name:'虎皮兰',emoji:'🌿',difficulty:'⭐',cycle:'多年生',tip:'耐旱耐阴，几乎不死',toxic:false}
+            ],
+            'default': [
+                {name:'小白菜',emoji:'🥬',difficulty:'⭐',cycle:'30-45天',tip:'生长快，适合新手',toxic:false},
+                {name:'薄荷',emoji:'🍃',difficulty:'⭐',cycle:'全年可收',tip:'极易养护，多用途',toxic:false},
+                {name:'绿萝',emoji:'🌿',difficulty:'⭐',cycle:'多年生',tip:'散射光即可',toxic:true,note:'⚠️ 汁液有毒'},
+                {name:'番茄',emoji:'🍅',difficulty:'⭐⭐',cycle:'60-80天',tip:'产量高，成就感强',toxic:true,note:'⚠️ 茎叶有毒'}
+            ]
+        };
+        function generateRecommend() {
+            const dir = document.getElementById('rec-direction').value;
+            const city = document.getElementById('rec-city').value;
+            const exp = document.getElementById('rec-exp').value;
+            const purpose = document.getElementById('rec-purpose').value;
+            const resultDiv = document.getElementById('recommend-result');
+            const cardsDiv = document.getElementById('recommend-cards');
+
+            const key = `${dir}-${city}-${exp}-${purpose}`;
+            const plants = plantDB[key] || plantDB['default'];
+
+            cardsDiv.innerHTML = '';
+            plants.forEach((plant, idx) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'glass-card-light rounded-xl p-5 hover-lift';
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="text-3xl">${plant.emoji}</div>
+                            <div>
+                                <div class="text-white font-bold">${plant.name}</div>
+                                <div class="text-xs text-emerald-300/70">难度: ${plant.difficulty} · 周期: ${plant.cycle}</div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-emerald-200/80 mb-2">${plant.tip}</div>
+                        ${plant.toxic ? `<div class="text-xs text-rose-300 bg-rose-500/10 px-2 py-1 rounded">${plant.note}</div>` : '<div class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">✅ 安全无毒</div>'}
+                    `;
+                    cardsDiv.appendChild(div);
+                }, idx * 150);
+            });
+            resultDiv.classList.remove('hidden');
+        }
+
+        // ==================== 病虫害诊断（增强版：含安全等级） ====================
+        const pestDB = {
+            'leaf-white': {
+                name: '白粉病',
+                desc: '叶片表面出现白色粉末状物质，是真菌性病害，高温高湿环境易发。',
+                level: 'mid',
+                safetyLevel: 'yellow',
+                safetyLabel: '🟡 中等注意',
+                safetyDesc: '需要天然药剂防治，注意安全间隔期。使用小苏打水喷洒后，建议间隔7天再食用处理过的叶片。',
+                safetyTips: [
+                    '喷药时佩戴手套和口罩',
+                    '处理后7天内不要食用喷洒过的叶片',
+                    '优先剪除严重病叶，减少药剂使用',
+                    '保持良好通风，降低复发风险'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'剪除严重病叶，改善通风'},
+                    {level:2,name:'生物防治',method:'喷洒枯草芽孢杆菌溶液'},
+                    {level:3,name:'天然药剂',method:'1:10小苏打水喷洒，每3天1次'}
+                ]
+            },
+            'leaf-yellow': {
+                name: '缺氮/浇水过多',
+                desc: '老叶发黄通常是缺氮或浇水过多导致根系缺氧。',
+                level: 'low',
+                safetyLevel: 'green',
+                safetyLabel: '🟢 绿色安全',
+                safetyDesc: '物理/生物方法即可解决，无需使用任何药剂，对家庭环境完全安全。',
+                safetyTips: [
+                    '调整浇水频率，遵循"见干见湿"原则',
+                    '使用腐熟有机肥补充养分',
+                    '淘米水浇灌需稀释3倍以上',
+                    '避免积水，确保容器底部有排水孔'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'调整浇水频率，见干见湿'},
+                    {level:2,name:'生物防治',method:'施用腐熟有机肥'},
+                    {level:3,name:'天然药剂',method:'稀释的淘米水浇灌'}
+                ]
+            },
+            'leaf-bug': {
+                name: '蚜虫侵害',
+                desc: '叶片背面或嫩茎出现绿色/黑色小虫，分泌蜜露吸引蚂蚁。',
+                level: 'mid',
+                safetyLevel: 'yellow',
+                safetyLabel: '🟡 中等注意',
+                safetyDesc: '需要天然药剂防治，肥皂水喷洒后建议间隔5天再食用处理过的部位。',
+                safetyTips: [
+                    '肥皂水需使用无香型，避免添加剂伤害植物',
+                    '喷洒后5天内不要食用处理过的叶片',
+                    '黄色粘虫板放置在儿童接触不到的位置',
+                    '优先使用强力水流冲洗，减少药剂使用'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'强力水流冲洗，黄色粘虫板诱杀'},
+                    {level:2,name:'生物防治',method:'释放瓢虫或使用苦参碱'},
+                    {level:3,name:'天然药剂',method:'肥皂水(1L水+5ml无香肥皂)喷洒'}
+                ]
+            },
+            'leaf-spot': {
+                name: '灰霉病',
+                desc: '叶片出现灰褐色水渍状斑点，潮湿环境下表面长出灰色霉层。',
+                level: 'high',
+                safetyLevel: 'red',
+                safetyLabel: '🔴 需谨慎',
+                safetyDesc: '严重时需使用生物杀菌剂，严格按说明使用，安全间隔期14天。家庭种植优先物理隔离。',
+                safetyTips: [
+                    '立即隔离病株，防止传染其他植物',
+                    '如使用杀菌剂，严格按说明书稀释比例',
+                    '安全间隔期14天内禁止食用处理过的植物',
+                    '操作时佩戴手套，避免皮肤接触',
+                    '儿童和宠物远离喷药区域'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'立即移除病叶病果，销毁处理'},
+                    {level:2,name:'生物防治',method:'喷洒枯草芽孢杆菌或木霉菌'},
+                    {level:3,name:'天然药剂',method:'1%小苏打水+0.1%植物油乳液喷洒'}
+                ]
+            },
+            'leaf-hole': {
+                name: '菜青虫/夜蛾幼虫',
+                desc: '叶片出现不规则孔洞和缺刻，可见绿色或褐色虫体。',
+                level: 'mid',
+                safetyLevel: 'yellow',
+                safetyLabel: '🟡 中等注意',
+                safetyDesc: '需要天然药剂防治，使用BT菌剂后建议间隔7天再食用。',
+                safetyTips: [
+                    '人工捕捉幼虫是最安全有效的方法',
+                    'BT菌剂为生物农药，对人体相对安全',
+                    '使用后7天内不要食用处理过的叶片',
+                    '傍晚喷药效果最佳'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'人工捕捉幼虫，夜间检查'},
+                    {level:2,name:'生物防治',method:'喷洒苏云金杆菌(BT)制剂'},
+                    {level:3,name:'天然药剂',method:'辣椒水+大蒜水混合喷洒'}
+                ]
+            },
+            'stem-bug': {
+                name: '红蜘蛛',
+                desc: '叶背出现细小红色虫体，叶片出现针尖大小黄点，干燥环境易发。',
+                level: 'high',
+                safetyLevel: 'red',
+                safetyLabel: '🔴 需谨慎',
+                safetyDesc: '繁殖极快，需持续防治。印楝油为天然药剂但仍需注意安全间隔期7天。',
+                safetyTips: [
+                    '红蜘蛛繁殖极快，发现后立即处理',
+                    '增加空气湿度是最有效的预防手段',
+                    '印楝油使用后7天内不要食用处理部位',
+                    '严重感染时考虑淘汰病株，防止扩散',
+                    '定期检查叶背，早发现早处理'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'增加空气湿度，定期喷水'},
+                    {level:2,name:'生物防治',method:'释放捕食螨'},
+                    {level:3,name:'天然药剂',method:'印楝油稀释喷洒'}
+                ]
+            },
+            'root-yellow': {
+                name: '根腐病',
+                desc: '根系发黑腐烂，叶片从下部开始发黄萎蔫，浇水后不易恢复。',
+                level: 'high',
+                safetyLevel: 'red',
+                safetyLabel: '🔴 需谨慎',
+                safetyDesc: '根腐病需立即处理，严重时需换土重植。使用杀菌剂时安全间隔期14天。',
+                safetyTips: [
+                    '立即停止浇水，检查根系状况',
+                    '脱盆检查，剪除所有黑色腐烂根系',
+                    '换用全新消毒过的土壤',
+                    '如使用杀菌剂浸根，14天内不要食用',
+                    '改善排水条件是预防的关键'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'脱盆修根，换土重植'},
+                    {level:2,name:'生物防治',method:'木霉菌拌入新土预防'},
+                    {level:3,name:'天然药剂',method:'高锰酸钾1000倍液浸根10分钟'}
+                ]
+            },
+            'flower-spot': {
+                name: '灰霉病（花果期）',
+                desc: '花朵和幼果出现灰褐色软腐，表面密生灰色霉层。',
+                level: 'high',
+                safetyLevel: 'red',
+                safetyLabel: '🔴 需谨慎',
+                safetyDesc: '花果期灰霉病传播快，需及时摘除病部。化学防治安全间隔期14天。',
+                safetyTips: [
+                    '立即摘除所有病花病果，装袋密封丢弃',
+                    '不要将病部丢入堆肥，会传播病菌',
+                    '降低湿度，增加通风是关键预防措施',
+                    '使用杀菌剂后14天内禁止食用果实',
+                    '避免傍晚浇水，减少夜间湿度'
+                ],
+                treatment: [
+                    {level:1,name:'物理防治',method:'摘除病花病果，增加通风'},
+                    {level:2,name:'生物防治',method:'枯草芽孢杆菌喷洒'},
+                    {level:3,name:'天然药剂',method:'1%小苏打水喷洒花果'}
+                ]
+            }
+        };
+        function diagnosePest() {
+            const part = document.getElementById('pest-part').value;
+            const symptom = document.getElementById('pest-symptom').value;
+            const resultDiv = document.getElementById('pest-result');
+
+            if(!part || !symptom) { alert('请选择受害部位和症状类型'); return; }
+
+            const key = `${part}-${symptom}`;
+            const data = pestDB[key] || pestDB['leaf-yellow'];
+
+            document.getElementById('pest-diagnosis').innerHTML = `
+                <div class="font-bold text-white mb-1">${data.name}</div>
+                <div class="text-emerald-200/80">${data.desc}</div>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold ${data.level==='low'?'bg-emerald-500/20 text-emerald-300':data.level==='mid'?'bg-amber-500/20 text-amber-300':'bg-rose-500/20 text-rose-300'}">
+                        危害等级: ${data.level==='low'?'低':data.level==='mid'?'中':'高'}
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold safety-${data.safetyLevel}">
+                        ${data.safetyLabel}
+                    </span>
+                </div>
+            `;
+
+            const treatmentDiv = document.getElementById('pest-treatment');
+            treatmentDiv.innerHTML = '';
+            data.treatment.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start gap-3 p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20';
+                div.innerHTML = `
+                    <div class="w-6 h-6 rounded-full ${t.level===1?'bg-emerald-500/30 text-emerald-300':t.level===2?'bg-amber-500/30 text-amber-300':'bg-rose-500/30 text-rose-300'} flex items-center justify-center text-xs font-bold shrink-0">${t.level}</div>
+                    <div>
+                        <div class="text-white font-bold text-sm">${t.name}</div>
+                        <div class="text-emerald-200/70 text-sm">${t.method}</div>
+                    </div>
+                `;
+                treatmentDiv.appendChild(div);
+            });
+
+            const safetySection = document.getElementById('pest-safety-section');
+            safetySection.innerHTML = `
+                <div class="p-4 rounded-xl bg-${data.safetyLevel==='green'?'emerald':data.safetyLevel==='yellow'?'amber':'rose'}-900/20 border border-${data.safetyLevel==='green'?'emerald':data.safetyLevel==='yellow'?'amber':'rose'}-500/30">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-lg">${data.safetyLabel.split(' ')[0]}</span>
+                        <span class="font-bold text-${data.safetyLevel==='green'?'emerald':data.safetyLevel==='yellow'?'amber':'rose'}-300">安全等级：${data.safetyLabel.split(' ').slice(1).join(' ')}</span>
+                    </div>
+                    <p class="text-sm text-emerald-200/80 mb-3">${data.safetyDesc}</p>
+                    <div class="text-rose-300 font-bold text-sm mb-2">⚠️ 安全提示</div>
+                    <ul class="space-y-1">
+                        ${data.safetyTips.map(tip => `
+                            <li class="flex items-start gap-2 text-sm text-emerald-200/70">
+                                <span class="text-rose-400 shrink-0">•</span>
+                                <span>${tip}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+
+            resultDiv.classList.remove('hidden');
+        }
+
+        // ==================== 种植日历 ====================
+        const calendarDB = {
+            'south': {
+                name: '华南地区（广州/深圳/南宁）',
+                months: [
+                    {m:'1月',sow:'番茄、辣椒、茄子',harvest:'生菜、小白菜',note:'冬季温和，可全年种植'},
+                    {m:'2月',sow:'黄瓜、丝瓜、豆角',harvest:'番茄、辣椒',note:'春播开始'},
+                    {m:'3月',sow:'空心菜、红薯叶',harvest:'黄瓜、丝瓜',note:'梅雨前抢种'},
+                    {m:'4月',sow:'秋葵、南瓜',harvest:'空心菜、豆角',note:'注意排水'},
+                    {m:'5月',sow:'夏白菜、耐热生菜',harvest:'秋葵、南瓜',note:'高温期选耐热品种'},
+                    {m:'6月',sow:'秋番茄、秋辣椒',harvest:'夏白菜',note:'台风季注意防护'},
+                    {m:'7月',sow:'秋黄瓜、秋豆角',harvest:'秋番茄苗',note:'遮阳网降温'},
+                    {m:'8月',sow:'菠菜、香菜、生菜',harvest:'秋黄瓜',note:'秋播开始'},
+                    {m:'9月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'最佳种植季'},
+                    {m:'10月',sow:'番茄、辣椒、茄子',harvest:'小白菜',note:'秋高气爽'},
+                    {m:'11月',sow:'生菜、茼蒿、豌豆',harvest:'番茄、辣椒',note:'冬季蔬菜主季'},
+                    {m:'12月',sow:'土豆、萝卜',harvest:'生菜、茼蒿',note:'注意防寒'}
+                ]
+            },
+            'east': {
+                name: '华东地区（上海/杭州/南京）',
+                months: [
+                    {m:'3月',sow:'番茄、辣椒、茄子',harvest:'',note:'春播开始'},
+                    {m:'4月',sow:'黄瓜、丝瓜、豆角',harvest:'',note:'气温回升'},
+                    {m:'5月',sow:'空心菜、红薯叶',harvest:'生菜、小白菜',note:'梅雨季前'},
+                    {m:'6月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、丝瓜',note:'注意排水'},
+                    {m:'7月',sow:'秋番茄、秋辣椒',harvest:'豆角、空心菜',note:'高温遮阳'},
+                    {m:'8月',sow:'秋黄瓜、秋豆角',harvest:'夏白菜',note:'台风防护'},
+                    {m:'9月',sow:'菠菜、香菜、生菜',harvest:'秋番茄',note:'秋播黄金期'},
+                    {m:'10月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'最佳种植季'},
+                    {m:'11月',sow:'生菜、茼蒿、豌豆',harvest:'小白菜',note:'冬季蔬菜'},
+                    {m:'12月',sow:'土豆、萝卜',harvest:'生菜、茼蒿',note:'大棚保温'}
+                ]
+            },
+            'north': {
+                name: '华北地区（北京/天津/石家庄）',
+                months: [
+                    {m:'4月',sow:'番茄、辣椒、茄子',harvest:'',note:'终霜后播种'},
+                    {m:'5月',sow:'黄瓜、丝瓜、豆角',harvest:'',note:'气温稳定'},
+                    {m:'6月',sow:'空心菜、红薯叶',harvest:'生菜、小白菜',note:'初夏种植'},
+                    {m:'7月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、丝瓜',note:'高温选耐热品种'},
+                    {m:'8月',sow:'秋番茄、秋辣椒',harvest:'豆角',note:'秋播准备'},
+                    {m:'9月',sow:'菠菜、香菜、生菜',harvest:'夏白菜',note:'最佳秋播期'},
+                    {m:'10月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'收获旺季'},
+                    {m:'11月',sow:'生菜、茼蒿、豌豆',harvest:'小白菜',note:'温室种植'},
+                    {m:'12月',sow:'蒜苗、豆芽',harvest:'生菜、茼蒿',note:'室内种植'}
+                ]
+            }
+        };
+        function showCalendar(region) {
+            const data = calendarDB[region] || calendarDB['south'];
+            const content = document.getElementById('calendar-content');
+            content.innerHTML = '';
+
+            document.querySelectorAll('#panel-calendar button').forEach(btn => {
+                btn.classList.remove('bg-emerald-600');
+                btn.classList.add('bg-emerald-900/40');
+            });
+            event.target.classList.remove('bg-emerald-900/40');
+            event.target.classList.add('bg-emerald-600');
+
+            data.months.forEach((m, idx) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'glass-card-light rounded-xl p-4';
+                    div.innerHTML = `
+                        <div class="text-emerald-300 font-bold text-lg mb-2">${m.m}</div>
+                        <div class="text-xs text-emerald-200/60 mb-1">🌱 播种</div>
+                        <div class="text-sm text-white mb-2">${m.sow || '—'}</div>
+                        ${m.harvest ? `<div class="text-xs text-amber-200/60 mb-1">🌾 收获</div><div class="text-sm text-white mb-2">${m.harvest}</div>` : ''}
+                        <div class="text-xs text-emerald-400/60">💡 ${m.note}</div>
+                    `;
+                    content.appendChild(div);
+                }, idx * 50);
+            });
+        }
+
+        // ==================== 伴生种植 ====================
+        const companionDB = {
+            'tomato': {
+                good: [
+                    {plant:'罗勒',benefit:'驱虫（蚊蝇/蚜虫）+ 提升风味',mechanism:'驱虫 + 风味提升',method:'间隔20cm种植'},
+                    {plant:'胡萝卜',benefit:'地下互不干扰，深浅根互补',mechanism:'空间互补',method:'番茄行间套种'},
+                    {plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔30cm环绕种植'}
+                ],
+                bad: [
+                    {plant:'土豆',benefit:'同属茄科，易传染疫病',reason:'同科易感病',method:'避免相邻种植，间隔2米以上'},
+                    {plant:'玉米',benefit:'遮阴 + 争夺养分和水分',reason:'争养分',method:'避免同盆种植'},
+                    {plant:'茴香',benefit:'分泌抑制物质，阻碍番茄生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'}
+                ]
+            },
+            'cucumber': {
+                good: [
+                    {plant:'豆类',benefit:'固氮供肥 + 提供遮阴',mechanism:'固氮互助',method:'黄瓜搭架下方种豆类'},
+                    {plant:'向日葵',benefit:'天然支架 + 吸引授粉昆虫',mechanism:'空间互补 + 驱虫',method:'向日葵为黄瓜提供攀爬支架'},
+                    {plant:'莳萝',benefit:'吸引寄生蜂，防治黄瓜甲虫',mechanism:'驱虫',method:'黄瓜行间点缀种植'}
+                ],
+                bad: [
+                    {plant:'土豆',benefit:'争夺大量养分和水分',reason:'争养分',method:'避免同盆种植'},
+                    {plant:'芳香草药（鼠尾草/迷迭香）',benefit:'抑制黄瓜生长',reason:'分泌抑制物质',method:'分开种植'}
+                ]
+            },
+            'pepper': {
+                good: [
+                    {plant:'罗勒',benefit:'驱虫（蚜虫/蚊蝇）+ 提升风味',mechanism:'驱虫 + 风味提升',method:'间隔15cm种植'},
+                    {plant:'胡萝卜',benefit:'地下互不干扰，深浅根互补',mechanism:'空间互补',method:'辣椒行间套种'},
+                    {plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔25cm环绕种植'}
+                ],
+                bad: [
+                    {plant:'茴香',benefit:'分泌抑制物质，阻碍辣椒生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'},
+                    {plant:'大豆',benefit:'争夺养分和生长空间',reason:'争养分',method:'避免同盆种植'}
+                ]
+            },
+            'eggplant': {
+                good: [
+                    {plant:'豆类',benefit:'固氮供肥，改善土壤',mechanism:'固氮互助',method:'茄子行间种矮生豆类'},
+                    {plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔25cm环绕种植'},
+                    {plant:'青椒',benefit:'同类植物，生长需求相似，互助互利',mechanism:'同类互助',method:'可相邻种植，间隔30cm'}
+                ],
+                bad: [
+                    {plant:'茴香',benefit:'分泌抑制物质，阻碍茄子生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'},
+                    {plant:'烟草',benefit:'同属茄科，易传染花叶病毒等病害',reason:'同科易感病',method:'严禁相邻种植'}
+                ]
+            },
+            'strawberry': {
+                good: [
+                    {plant:'矮生豆类',benefit:'固氮供肥，改善土壤肥力',mechanism:'固氮互助',method:'草莓行间种矮生豆'},
+                    {plant:'生菜',benefit:'地面覆盖保湿，抑制杂草',mechanism:'空间互补',method:'草莓株间种生菜'},
+                    {plant:'葱科（葱/蒜）',benefit:'气味驱虫，减少蚜虫和螨虫',mechanism:'驱虫',method:'草莓边缘种植一圈'}
+                ],
+                bad: [
+                    {plant:'甘蓝',benefit:'争夺大量养分，影响草莓产量',reason:'争养分',method:'避免同盆种植'},
+                    {plant:'土豆',benefit:'同属易感 Verticillium 枯萎病',reason:'同科易感病',method:'严禁相邻种植'}
+                ]
+            },
+            'lettuce': {
+                good: [
+                    {plant:'草莓',benefit:'草莓地面覆盖保湿，生菜遮阴',mechanism:'空间互补',method:'交替行种植'},
+                    {plant:'胡萝卜',benefit:'深浅根互补，互不干扰',mechanism:'空间互补',method:'生菜行间套种'},
+                    {plant:'葱科（葱/蒜）',benefit:'气味驱蚜虫',mechanism:'驱虫',method:'每3行生菜1行葱'}
+                ],
+                bad: [
+                    {plant:'芹菜',benefit:'分泌抑制物质，影响生菜生长',reason:'分泌抑制物质',method:'分开种植'}
+                ]
+            },
+            'beans': {
+                good: [
+                    {plant:'玉米',benefit:'玉米为豆类提供支架，豆类固氮回馈玉米',mechanism:'固氮互助 + 空间互补',method:'经典三姐妹搭配，玉米中心+豆类攀爬'},
+                    {plant:'南瓜',benefit:'南瓜地面覆盖保墒，豆类固氮供肥',mechanism:'固氮互助 + 空间互补',method:'三姐妹种植法：玉米+豆类+南瓜'},
+                    {plant:'胡萝卜',benefit:'深浅根互补，互不干扰',mechanism:'空间互补',method:'豆类行间套种'}
+                ],
+                bad: [
+                    {plant:'葱科（葱/蒜/洋葱）',benefit:'葱科分泌物抑制豆类根瘤菌固氮',reason:'抑制固氮菌',method:'严禁相邻种植'},
+                    {plant:'茴香',benefit:'分泌抑制物质，阻碍豆类生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'}
+                ]
+            }
+        };
+        function showCompanion() {
+            const main = document.getElementById('companion-main').value;
+            const data = companionDB[main] || companionDB['tomato'];
+            const result = document.getElementById('companion-result');
+
+            result.innerHTML = `
+                <div class="glass-card-light rounded-xl p-5 companion-good">
+                    <div class="text-emerald-300 font-bold mb-3 flex items-center gap-2">
+                        <span class="text-xl">✅</span> 最佳搭档 · 相生
+                    </div>
+                    <div class="space-y-3">
+                        ${data.good.map(g => `
+                            <div class="p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-white font-bold">${g.plant}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">${g.mechanism}</span>
+                                </div>
+                                <div class="text-sm text-emerald-200/80">${g.benefit}</div>
+                                <div class="text-xs text-emerald-400 mt-1">📐 ${g.method}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="glass-card-light rounded-xl p-5 companion-bad">
+                    <div class="text-rose-300 font-bold mb-3 flex items-center gap-2">
+                        <span class="text-xl">❌</span> 避免搭配 · 相克
+                    </div>
+                    <div class="space-y-3">
+                        ${data.bad.map(b => `
+                            <div class="p-3 rounded-lg bg-rose-900/20 border border-rose-500/20">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-white font-bold">${b.plant}</span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">${b.reason}</span>
+                                </div>
+                                <div class="text-sm text-rose-200/80">${b.benefit}</div>
+                                <div class="text-xs text-rose-400 mt-1">📐 ${b.method}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== 智能设备 ====================
+        const devicesDB = [
+            {name:'土壤湿度传感器',price:'¥15-50',func:'实时监测土壤湿度',icon:'💧'},
+            {name:'自动浇花器',price:'¥30-100',func:'定时定量自动浇水',icon:'🚿'},
+            {name:'LED植物补光灯',price:'¥50-300',func:'全光谱补光，促进生长',icon:'💡'},
+            {name:'温湿度监测仪',price:'¥20-80',func:'环境温度湿度实时监控',icon:'🌡️'},
+            {name:'智能种菜机',price:'¥200-2000',func:'水培+LED+自动循环',icon:'🤖'},
+            {name:'电动喷雾器',price:'¥30-60',func:'均匀喷洒水/药/肥',icon:'🔫'}
+        ];
+        function showDevices() {
+            const grid = document.getElementById('devices-grid');
+            grid.innerHTML = '';
+            devicesDB.forEach((d, idx) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'glass-card-light rounded-xl p-5 text-center hover-lift';
+                    div.innerHTML = `
+                        <div class="text-3xl mb-2">${d.icon}</div>
+                        <div class="text-white font-bold mb-1">${d.name}</div>
+                        <div class="text-emerald-300 text-sm mb-1">${d.price}</div>
+                        <div class="text-xs text-emerald-200/60">${d.func}</div>
+                    `;
+                    grid.appendChild(div);
+                }, idx * 100);
+            });
+        }
+
+        // ==================== 零废弃水培（新增） ====================
+        const regrowDB = {
+            'scallion': {
+                name: '小葱',
+                emoji: '🧅',
+                cut: '留3-5厘米带根葱白',
+                water: '清水没过根部1厘米',
+                change: '每2-3天换水',
+                sprout: 3,
+                harvest: 7,
+                tips: ['只剪外叶留内芯，可持续采收', '水质变浑立即更换', '放在散射光处，避免暴晒', '可加入少量营养液加速生长'],
+                savings: {money: 2.5, waste: 80}
+            },
+            'lettuce': {
+                name: '生菜',
+                emoji: '🥬',
+                cut: '留底部2-3厘米菜根',
+                water: '水位没过根部0.5厘米',
+                change: '每2天换水',
+                sprout: 10,
+                harvest: 15,
+                tips: ['新叶从中心长出后，只摘外层', '避免水位过高导致腐烂', '可转土培获得更大产量', '夏季需每天换水防臭'],
+                savings: {money: 4.0, waste: 120}
+            },
+            'coriander': {
+                name: '香菜',
+                emoji: '🌿',
+                cut: '留3厘米左右带根香菜头',
+                water: '清水没过根部1厘米',
+                change: '每2-3天换水',
+                sprout: 20,
+                harvest: 30,
+                tips: ['香菜喜凉，夏季放在阴凉处', '根系发达后可转土培', '水培香味略淡，但更新鲜', '可分批水培，循环采收'],
+                savings: {money: 3.5, waste: 60}
+            },
+            'celery': {
+                name: '芹菜',
+                emoji: '🌱',
+                cut: '留底部3厘米芹菜单株',
+                water: '水位没过根部1厘米',
+                change: '每2天换水',
+                sprout: 14,
+                harvest: 21,
+                tips: ['新叶细长但香味浓郁', '需充足散射光', '可多次收割，持续2-3个月', '转土培后茎秆更粗壮'],
+                savings: {money: 3.0, waste: 100}
+            },
+            'basil': {
+                name: '罗勒',
+                emoji: '🍃',
+                cut: '留底部5厘米带茎段',
+                water: '清水没过茎底部2厘米',
+                change: '每3天换水',
+                sprout: 7,
+                harvest: 14,
+                tips: ['生根速度快，7天可见白根', '喜温暖，20-25°C最佳', '可水培转土培，产量更高', '定期摘心促进分枝'],
+                savings: {money: 5.0, waste: 40}
+            }
+        };
+
+        function showRegrow() {
+            const veg = document.getElementById('regrow-veg').value;
+            const data = regrowDB[veg];
+            const result = document.getElementById('regrow-result');
+
+            result.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="glass-card-light rounded-xl p-5">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="text-4xl">${data.emoji}</div>
+                            <div>
+                                <div class="text-white font-bold text-lg">${data.name}水培指南</div>
+                                <div class="text-xs text-emerald-300/70">${data.sprout}天冒芽 · ${data.harvest}天可采收</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3 p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                                <div>
+                                    <div class="text-white font-bold text-sm">切割处理</div>
+                                    <div class="text-sm text-emerald-200/70">${data.cut}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                                <div>
+                                    <div class="text-white font-bold text-sm">水培入瓶</div>
+                                    <div class="text-sm text-emerald-200/70">${data.water}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">3</div>
+                                <div>
+                                    <div class="text-white font-bold text-sm">换水维护</div>
+                                    <div class="text-sm text-emerald-200/70">${data.change}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/30 text-emerald-300 flex items-center justify-center text-xs font-bold shrink-0">4</div>
+                                <div>
+                                    <div class="text-white font-bold text-sm">采收享用</div>
+                                    <div class="text-sm text-emerald-200/70">只剪外叶留内芯，可持续采收2-3个月</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="glass-card-light rounded-xl p-5">
+                            <div class="text-emerald-300 font-bold mb-3">💡 专业小贴士</div>
+                            <ul class="space-y-2">
+                                ${data.tips.map(tip => `
+                                    <li class="flex items-start gap-2 text-sm text-emerald-200/80">
+                                        <span class="text-amber-400 shrink-0">•</span>
+                                        <span>${tip}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        <div class="glass-card-light rounded-xl p-5 border-l-4 border-amber-400">
+                            <div class="text-amber-300 font-bold mb-3">📊 零废弃贡献统计（每批次）</div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="text-center p-3 rounded-lg bg-emerald-900/20">
+                                    <div class="text-2xl font-black text-emerald-300">¥${data.savings.money}</div>
+                                    <div class="text-xs text-emerald-200/60">节约食材费用</div>
+                                </div>
+                                <div class="text-center p-3 rounded-lg bg-emerald-900/20">
+                                    <div class="text-2xl font-black text-amber-300">${data.savings.waste}g</div>
+                                    <div class="text-xs text-emerald-200/60">减少厨余垃圾</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card-light rounded-xl p-4">
+                            <div class="text-sm text-emerald-200/70">
+                                <span class="text-emerald-300 font-bold">生长周期可视化：</span>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <div class="flex-1 h-2 bg-emerald-900/40 rounded-full overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between text-xs text-emerald-300/60 mt-1">
+                                    <span>Day 0</span>
+                                    <span>Day ${data.sprout} 冒芽</span>
+                                    <span>Day ${data.harvest} 采收</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== 种植急救口诀（新增） ====================
+        const firstaidDB = [
+            {
+                id: 'overwater',
+                symptom: '蔫软 + 土湿',
+                diagnosis: '闷根急救',
+                cause: '浇水过多导致根系缺氧',
+                solution: [
+                    '立即停止浇水',
+                    '用竹签在土面扎几个透气孔',
+                    '移至通风处加速水分蒸发',
+                    '严重时需脱盆晾根1-2天'
+                ],
+                prevent: '遵循"见干见湿"原则：手指插入土中2cm，干燥才浇',
+                color: 'rose'
+            },
+            {
+                id: 'nitrogen',
+                symptom: '老叶先黄',
+                diagnosis: '缺氮补肥',
+                cause: '土壤中氮元素不足',
+                solution: [
+                    '黄豆肥水：浸泡一夜后稀释浇灌',
+                    '淘米水发酵3天后稀释使用',
+                    '施用腐熟有机肥',
+                    '3天后可见新叶转绿'
+                ],
+                prevent: '生长期每2周施一次氮肥，薄肥勤施',
+                color: 'amber'
+            },
+            {
+                id: 'iron',
+                symptom: '新叶先黄',
+                diagnosis: '缺铁矫正',
+                cause: '土壤偏碱或铁元素不可吸收',
+                solution: [
+                    '白醋水喷洒：白醋:水 = 1:300',
+                    '硫酸亚铁溶液灌根',
+                    '使用酸性营养土换盆',
+                    '1周后新叶恢复绿色'
+                ],
+                prevent: '定期使用酸性水浇灌，保持土壤pH 6.0-6.5',
+                color: 'cyan'
+            },
+            {
+                id: 'powdery',
+                symptom: '叶面白粉末',
+                diagnosis: '白粉病防治',
+                cause: '真菌性病害，高温高湿环境易发',
+                solution: [
+                    '剪除严重病叶并销毁',
+                    '牛奶稀释液喷洒（牛奶:水=1:9）',
+                    '小苏打水喷洒（1:10）',
+                    '改善通风，降低湿度'
+                ],
+                prevent: '避免叶面长期潮湿，保持植株间距通风',
+                color: 'emerald'
+            }
+        ];
+
+        function renderFirstaidCards() {
+            const container = document.getElementById('firstaid-cards');
+            container.innerHTML = firstaidDB.map(item => `
+                <button onclick="showFirstaidDetail('${item.id}')" class="glass-card-light rounded-xl p-4 text-left hover-lift transition-all" style="border-left: 3px solid ${item.color==='rose'?'#f43f5e':item.color==='amber'?'#f59e0b':item.color==='cyan'?'#06b6d4':'#10b981'}">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl">${item.symptom.includes('蔫') ? '💧' : item.symptom.includes('老叶') ? '🍂' : item.symptom.includes('新叶') ? '🌱' : '⚪'}</span>
+                        <div>
+                            <div class="text-white font-bold">${item.symptom}</div>
+                            <div class="text-xs" style="color: ${item.color==='rose'?'#fda4af':item.color==='amber'?'#fcd34d':item.color==='cyan'?'#67e8f9':'#6ee7b7'}">= ${item.diagnosis}</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-emerald-200/60">点击查看完整急救方案 →</div>
+                </button>
+            `).join('');
+        }
+
+        function showFirstaidDetail(id) {
+            const item = firstaidDB.find(f => f.id === id);
+            const detail = document.getElementById('firstaid-detail');
+            const colorMap = {
+                'rose': {bg: 'rgba(225,29,72,0.2)', border: 'rgba(244,63,94,0.3)', text: '#fda4af', badgeBg: 'rgba(244,63,94,0.3)', badgeText: '#fda4af'},
+                'amber': {bg: 'rgba(217,119,6,0.2)', border: 'rgba(245,158,11,0.3)', text: '#fcd34d', badgeBg: 'rgba(245,158,11,0.3)', badgeText: '#fcd34d'},
+                'cyan': {bg: 'rgba(8,145,178,0.2)', border: 'rgba(6,182,212,0.3)', text: '#67e8f9', badgeBg: 'rgba(6,182,212,0.3)', badgeText: '#67e8f9'},
+                'emerald': {bg: 'rgba(16,185,129,0.2)', border: 'rgba(16,185,129,0.3)', text: '#6ee7b7', badgeBg: 'rgba(16,185,129,0.3)', badgeText: '#6ee7b7'}
+            };
+            const c = colorMap[item.color];
+
+            detail.innerHTML = `
+                <div class="glass-card-light rounded-xl p-5" style="border-left: 3px solid ${c.border}">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-3xl">${item.symptom.includes('蔫') ? '💧' : item.symptom.includes('老叶') ? '🍂' : item.symptom.includes('新叶') ? '🌱' : '⚪'}</span>
+                        <div>
+                            <div class="text-white font-bold text-lg">${item.symptom} = ${item.diagnosis}</div>
+                            <div class="text-sm text-emerald-200/70">${item.cause}</div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="font-bold text-sm mb-2" style="color: ${c.text}">🚨 急救步骤</div>
+                        <div class="space-y-2">
+                            ${item.solution.map((step, idx) => `
+                                <div class="flex items-start gap-3 p-3 rounded-lg" style="background: ${c.bg}; border: 1px solid ${c.border}">
+                                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style="background: ${c.badgeBg}; color: ${c.badgeText}">${idx + 1}</div>
+                                    <div class="text-sm text-emerald-200/80">${step}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-lg bg-emerald-900/20 border border-emerald-500/20">
+                        <div class="text-emerald-300 font-bold text-sm mb-1">🛡️ 预防建议</div>
+                        <div class="text-sm text-emerald-200/70">${item.prevent}</div>
+                    </div>
+                </div>
+            `;
+            detail.classList.remove('hidden');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({behavior:'smooth'});
+        }
+
+        // 初始化
+        window.onload = function() {
+            showCalendar('south');
+            showCompanion();
+            showRegrow();
+            renderFirstaidCards();
+        };
+    </script>
+</body>
+</html>

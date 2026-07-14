@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阳台农夫 Pro - 城市家庭种植智能顾问与植物医生 | TRAE AI创造力大赛</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#0f2b1e;--forest-mid:#1a3d2c;--sage:#7cb69d;--sage-light:#a8d5ba;--mint:#d4edda;--cream:#faf6f0;--cream-dark:#f0e8db;--terra:#c4785b;--terra-light:#e8a88a;--gold:#d4a853;--gold-light:#f0d68a;--bark:#5c3d2e;--bark-light:#8b6f5e;--text-dark:#1a1a1a;--text-mid:#4a4a4a;--text-light:#8a8a7a;--white:#ffffff;--shadow-soft:0 8px 32px rgba(15,43,30,0.12);--shadow-deep:0 16px 64px rgba(15,43,30,0.2);--radius:16px;--radius-sm:8px;--radius-lg:24px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px;overflow-x:hidden}
+body{font-family:'Noto Sans SC',sans-serif;color:var(--text-dark);background:var(--cream);line-height:1.8;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px}
+.reveal{opacity:1;transform:none;transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1)}
+.reveal.reveal-animate{opacity:0;transform:translateY(60px)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:1;transform:none;transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:1;transform:none;transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1)}
+.reveal-right.visible{opacity:1;transform:none}
+.reveal-scale{opacity:1;transform:none;transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1)}
+.reveal-scale.visible{opacity:1;transform:none}
+.main-nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(250,246,240,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(124,182,157,0.15);transition:all 0.4s ease;padding:0 24px}
+.main-nav.scrolled{background:rgba(250,246,240,0.95);box-shadow:0 4px 24px rgba(15,43,30,0.08)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Noto Serif SC',serif;font-weight:900;font-size:1.2rem;color:var(--forest)}
+.nav-logo .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--sage),var(--forest-mid));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.nav-logo .pro-tag{font-size:0.65rem;background:linear-gradient(135deg,var(--gold),var(--terra));color:white;padding:1px 6px;border-radius:100px;font-weight:700}
+.nav-right{display:flex;align-items:center;gap:12px}
+.silver-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;background:var(--white);border:1px solid rgba(124,182,157,0.3);color:var(--forest-mid);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s ease}
+.silver-btn:hover{border-color:var(--sage);background:var(--mint)}
+.silver-btn.active{background:linear-gradient(135deg,var(--gold),var(--terra));color:white;border-color:var(--gold);box-shadow:0 4px 16px rgba(212,168,83,0.3)}
+.nav-badge{padding:6px 14px;border-radius:100px;font-size:0.7rem;font-weight:600;background:rgba(124,182,157,0.1);color:var(--sage);border:1px solid rgba(124,182,157,0.2)}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(165deg,var(--forest) 0%,var(--forest-mid) 40%,#1e4d35 70%,#2a5e42 100%);overflow:hidden;padding:100px 24px 60px}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse 600px 400px at 20% 30%,rgba(124,182,157,0.15) 0%,transparent 70%),radial-gradient(ellipse 500px 500px at 80% 60%,rgba(212,168,83,0.1) 0%,transparent 70%),radial-gradient(ellipse 400px 300px at 50% 80%,rgba(196,120,91,0.08) 0%,transparent 70%);animation:heroGlow 12s ease-in-out infinite alternate}
+@keyframes heroGlow{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(30px,-20px) rotate(2deg)}}
+.leaf-particle{position:absolute;width:12px;height:12px;background:var(--sage);border-radius:0 50% 50% 50%;opacity:0;animation:leafFloat linear infinite}
+.leaf-particle:nth-child(1){left:10%;animation-duration:18s;animation-delay:0s;width:8px;height:8px}
+.leaf-particle:nth-child(2){left:25%;animation-duration:22s;animation-delay:3s;width:14px;height:14px}
+.leaf-particle:nth-child(3){left:40%;animation-duration:16s;animation-delay:6s;width:10px;height:10px}
+.leaf-particle:nth-child(4){left:55%;animation-duration:20s;animation-delay:2s;width:16px;height:16px}
+.leaf-particle:nth-child(5){left:70%;animation-duration:24s;animation-delay:8s;width:6px;height:6px}
+.leaf-particle:nth-child(6){left:85%;animation-duration:19s;animation-delay:4s;width:12px;height:12px}
+.leaf-particle:nth-child(7){left:15%;animation-duration:21s;animation-delay:10s;width:10px;height:10px}
+.leaf-particle:nth-child(8){left:60%;animation-duration:17s;animation-delay:1s;width:8px;height:8px}
+@keyframes leafFloat{0%{transform:translateY(100vh) rotate(0deg) scale(0);opacity:0}10%{opacity:0.6;transform:translateY(80vh) rotate(45deg) scale(1)}90%{opacity:0.3}100%{transform:translateY(-10vh) rotate(360deg) scale(0.5);opacity:0}}
+.hero-grid{position:absolute;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(124,182,157,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,182,157,0.06) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 20%,transparent 70%)}
+.hero-content{position:relative;z-index:10;text-align:center;max-width:900px}
+.hero-icon{width:100px;height:100px;margin:0 auto 32px;position:relative;animation:iconPulse 4s ease-in-out infinite}
+@keyframes iconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.hero-icon svg{width:100%;height:100%;filter:drop-shadow(0 4px 20px rgba(124,182,157,0.4))}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;background:rgba(124,182,157,0.15);border:1px solid rgba(124,182,157,0.3);border-radius:100px;color:var(--sage-light);font-size:0.85rem;font-weight:500;letter-spacing:2px;margin-bottom:28px;animation:fadeSlideDown 1s 0.3s both}
+.hero-badge .dot{width:6px;height:6px;background:var(--sage);border-radius:50%;animation:dotBlink 2s ease-in-out infinite}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,5.5vw,4.2rem);font-weight:900;color:var(--white);line-height:1.2;margin-bottom:16px;letter-spacing:6px;animation:fadeSlideDown 1s 0.5s both;text-shadow:0 4px 40px rgba(0,0,0,0.3);white-space:nowrap}
+.hero-slogan{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--sage-light);font-weight:300;letter-spacing:4px;margin-bottom:48px;animation:fadeSlideDown 1s 0.9s both}
+.hero-slogan::after{content:'';display:block;width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--sage),transparent);margin:20px auto 0}
+.hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-bottom:40px;animation:fadeSlideDown 1s 1.1s both}
+.hero-stat{text-align:center}
+.hero-stat-number{font-family:'Noto Serif SC',serif;font-size:2.5rem;font-weight:900;color:var(--gold);line-height:1}
+.hero-stat-label{font-size:0.8rem;color:rgba(255,255,255,0.6);margin-top:4px;letter-spacing:1px}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeSlideDown 1s 1.3s both}
+.hero-features{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:900px;margin:32px auto 0;animation:fadeSlideDown 1s 1.2s both}
+.hero-feature-item{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.3s ease;color:rgba(255,255,255,0.8);font-size:0.8rem}
+.hero-feature-item:hover{background:rgba(124,182,157,0.2);border-color:rgba(124,182,157,0.3);transform:translateY(-2px);color:var(--sage-light)}
+.hero-feature-icon{font-size:1.6rem;display:block;margin-bottom:6px}
+.hero-feature-text{font-size:0.75rem;font-weight:500;display:block;position:relative}
+.hero-feature-item.coming-soon{opacity:0.6}
+.coming-badge{font-size:0.55rem;padding:1px 5px;background:var(--terra);color:#fff;border-radius:100px;margin-left:4px;vertical-align:middle}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:100px;font-family:'Noto Sans SC',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.4s ease;border:none}
+.btn-hero-primary{background:linear-gradient(135deg,var(--sage),#5da882);color:white;box-shadow:0 4px 16px rgba(124,182,157,0.3)}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,182,157,0.4)}
+.btn-hero-ghost{background:rgba(255,255,255,0.1);color:var(--sage-light);border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px)}
+.btn-hero-ghost:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px)}
+.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.4);font-size:0.75rem;letter-spacing:2px;animation:fadeSlideDown 1s 1.5s both}
+.scroll-indicator .line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(124,182,157,0.6),transparent);animation:scrollLine 2s ease-in-out infinite}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.btn-enter-demo{position:relative;overflow:visible;padding:16px 40px;font-size:1.1rem}
+.btn-enter-demo .leaf-float{position:absolute;font-size:1.4rem;opacity:0;pointer-events:none}
+.btn-enter-demo .leaf-1{left:-20px;top:-10px}
+.btn-enter-demo .leaf-2{right:-16px;bottom:-8px}
+.btn-enter-demo .leaf-3{left:50%;top:-24px;margin-left:-10px}
+.btn-enter-demo:hover .leaf-1{animation:leafPop1 0.8s ease infinite}
+.btn-enter-demo:hover .leaf-2{animation:leafPop2 0.9s ease infinite 0.2s}
+.btn-enter-demo:hover .leaf-3{animation:leafPop3 0.7s ease infinite 0.1s}
+@keyframes leafPop1{0%{opacity:0;transform:translateY(0) rotate(0deg) scale(0.5)}50%{opacity:1}100%{opacity:0;transform:translateY(-30px) rotate(-30deg) scale(1.2)}}
+@keyframes leafPop2{0%{opacity:0;transform:translateY(0) rotate(0deg) scale(0.5)}50%{opacity:1}100%{opacity:0;transform:translateY(-25px) rotate(25deg) scale(1.1)}}
+@keyframes leafPop3{0%{opacity:0;transform:translateY(0) rotate(0deg) scale(0.5)}50%{opacity:1}100%{opacity:0;transform:translateY(-35px) rotate(-15deg) scale(1.3)}}
+html.scroll-locked,body.scroll-locked{overflow:hidden;height:100vh}
+html.scroll-locked .scroll-indicator{display:none}
+.section{padding:100px 24px;position:relative}
+.section-container{max-width:1280px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:10px;font-size:0.75rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.section-label::before{content:'';width:32px;height:2px;background:var(--sage)}
+.section-title{font-family:'Noto Serif SC',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--forest);line-height:1.3;margin-bottom:20px}
+.section-desc{font-size:1.05rem;color:var(--text-mid);max-width:680px;line-height:2}
+.demo-section{background:var(--white);border-top:1px solid rgba(124,182,157,0.1);border-bottom:1px solid rgba(124,182,157,0.1)}
+.demo-layout{display:flex;gap:24px;min-height:600px;margin-top:40px}
+.demo-sidebar{width:220px;flex-shrink:0;background:linear-gradient(180deg,var(--forest),var(--forest-mid));border-radius:var(--radius);padding:20px 0;box-shadow:var(--shadow-deep)}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:14px 20px;margin:4px 16px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.3s ease;color:rgba(255,255,255,0.7);font-size:0.9rem;font-weight:500;border:none;background:transparent;width:calc(100% - 32px);text-align:left}
+.sidebar-item:hover{background:rgba(255,255,255,0.1);color:var(--white)}
+.sidebar-item.active{background:rgba(255,255,255,0.15);color:var(--white);border-left:3px solid var(--sage)}
+.sidebar-item .icon{font-size:1.3rem}
+.sidebar-item .text{display:flex;flex-direction:column}
+.sidebar-item .title{font-size:0.9rem;font-weight:600}
+.sidebar-item .desc{font-size:0.7rem;opacity:0.7;margin-top:2px}
+.demo-content{flex:1;background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-soft);border:1px solid rgba(124,182,157,0.1);min-height:600px;overflow-y:auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeSlideDown 0.5s ease both}
+.form-select{width:100%;padding:14px 18px;border:2px solid rgba(124,182,157,0.2);border-radius:var(--radius-sm);background:var(--white);color:var(--text-dark);font-family:'Noto Sans SC',sans-serif;font-size:0.95rem;cursor:pointer;transition:all 0.3s ease;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237cb69d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:44px}
+.form-select:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 4px rgba(124,182,157,0.1)}
+.form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--forest);margin-bottom:8px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,var(--forest),var(--forest-mid));color:var(--white);border:none;border-radius:100px;font-family:'Noto Sans SC',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.4s ease;box-shadow:0 4px 16px rgba(15,43,30,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,43,30,0.3)}
+.btn-secondary{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-family:'Noto Sans SC',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.3s ease;border:2px solid rgba(124,182,157,0.25);background:var(--white);color:var(--forest-mid)}
+.btn-secondary:hover{background:var(--mint);border-color:var(--sage);transform:translateY(-1px)}
+.result-card{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-soft);border:1px solid rgba(15,43,30,0.06);animation:fadeSlideDown 0.5s ease both;transition:transform 0.3s cubic-bezier(0.22,1,0.36,1),box-shadow 0.3s ease,border-color 0.3s ease;cursor:pointer}
+.result-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-deep);border-color:rgba(124,182,157,0.3)}
+.tag-green{display:inline-block;padding:4px 12px;border-radius:100px;font-size:0.75rem;font-weight:600;background:var(--mint);color:var(--forest-mid);border:1px solid var(--sage-light)}
+.tag-yellow{display:inline-block;padding:4px 12px;border-radius:100px;font-size:0.75rem;font-weight:600;background:#fff8e1;color:#7d6608;border:1px solid var(--gold-light)}
+.tag-red{display:inline-block;padding:4px 12px;border-radius:100px;font-size:0.75rem;font-weight:600;background:#fce4ec;color:#880e4f;border:1px solid #f8bbd9}
+.treatment-step{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;background:var(--cream);border-radius:var(--radius-sm);margin-bottom:10px;border-left:4px solid var(--sage)}
+.treatment-step-number{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:white;flex-shrink:0}
+.cal-region-bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px}
+.cal-region-btn{padding:8px 20px;border:2px solid rgba(124,182,157,0.3);background:var(--white);border-radius:100px;font-family:'Noto Sans SC',sans-serif;font-size:0.85rem;font-weight:600;color:var(--forest);cursor:pointer;transition:all 0.3s ease}
+.cal-region-btn:hover{border-color:var(--sage);background:var(--mint)}
+.cal-region-btn.active{background:linear-gradient(135deg,var(--forest),var(--forest-mid));color:var(--white);border-color:var(--forest)}
+.data-banner{background:var(--white);border-bottom:1px solid rgba(124,182,157,0.1);padding:60px 24px}
+.data-banner-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px}
+.data-card{text-align:center;padding:32px 20px;background:var(--cream);border-radius:var(--radius);border:1px solid rgba(124,182,157,0.1)}
+.data-number{font-family:'Noto Serif SC',serif;font-size:3rem;font-weight:900;color:var(--terra);line-height:1}
+.data-label{font-size:0.9rem;color:var(--text-mid);margin-top:8px}
+.data-source{font-size:0.75rem;color:var(--text-light);margin-top:4px}
+.knowledge-section{background:var(--white);border-top:1px solid rgba(124,182,157,0.1);border-bottom:1px solid rgba(124,182,157,0.1)}
+.knowledge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:48px}
+.knowledge-item{background:var(--cream);border-radius:var(--radius);padding:24px 16px;text-align:center;border:1px solid rgba(124,182,157,0.1);transition:all 0.4s ease;cursor:default}
+.knowledge-item:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft);border-color:var(--sage)}
+.knowledge-icon{font-size:2rem;margin-bottom:8px}
+.knowledge-name{font-weight:700;color:var(--forest);font-size:0.9rem;margin-bottom:4px}
+.knowledge-count{font-size:0.75rem;color:var(--text-light)}
+.safety-section{background:var(--white)}
+.safety-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:48px}
+.safety-card{background:var(--cream);border-radius:var(--radius);padding:28px;border:1px solid rgba(0,0,0,0.04)}
+.safety-card h4{font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.05rem;margin-bottom:12px}
+.safety-card p{font-size:0.9rem;color:var(--text-mid);line-height:1.8}
+.scenario-section{background:var(--cream)}
+.scenario-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:48px}
+.scenario-card{background:var(--white);border-radius:var(--radius);padding:28px;border:1px solid rgba(0,0,0,0.04);transition:all 0.4s ease}
+.scenario-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-soft)}
+.scenario-card h4{font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.05rem;margin-bottom:12px}
+.scenario-card p{font-size:0.9rem;color:var(--text-mid);line-height:1.8}
+.footer{background:var(--forest);padding:60px 24px;text-align:center;position:relative;overflow:hidden}
+.footer::before{content:'';position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--sage),transparent)}
+.footer-logo{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--white);margin-bottom:12px;letter-spacing:4px}
+.footer-slogan{color:var(--sage-light);font-size:0.9rem;font-weight:300;letter-spacing:2px;margin-bottom:32px}
+.footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.85rem;transition:color 0.3s ease}
+.footer-links a:hover{color:var(--sage-light)}
+.footer-copyright{color:rgba(255,255,255,0.25);font-size:0.75rem;letter-spacing:1px}
+body.silver-mode{font-size:20px!important;line-height:2.2!important;background:#fffef7!important}
+body.silver-mode::after{content:'\1F9D3 银发模式已开启 · 大字高对比度界面';position:fixed;top:0;left:0;width:100%;background:linear-gradient(90deg,var(--terra),var(--gold));color:#fff;font-size:0.95rem;font-weight:700;text-align:center;padding:8px 0;z-index:10000;letter-spacing:2px;box-shadow:0 2px 12px rgba(196,120,91,0.3);animation:silverBarSlide 0.5s ease}
+@keyframes silverBarSlide{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+body.silver-mode .main-nav{top:36px!important}
+body.silver-mode .hero{padding-top:100px}
+body.silver-mode .hero h1{font-size:clamp(2.2rem,7vw,4rem)!important;letter-spacing:6px!important}
+body.silver-mode .hero-slogan{font-size:clamp(1.2rem,3vw,1.8rem)!important}
+body.silver-mode .section-title{font-size:clamp(1.8rem,4vw,2.6rem)!important}
+body.silver-mode .section-desc{font-size:1.15rem!important;color:#333!important}
+body.silver-mode .section{padding:80px 20px}
+body.silver-mode .section-label{font-size:0.9rem!important;letter-spacing:3px}
+body.silver-mode .form-label{font-size:1.05rem!important;font-weight:700!important;color:#1a1a1a!important}
+body.silver-mode .form-select{font-size:1.15rem!important;padding:18px 22px!important;border-width:3px!important;border-color:var(--sage)!important;color:#1a1a1a!important;font-weight:600!important}
+body.silver-mode .btn-primary{font-size:1.2rem!important;padding:18px 40px!important;font-weight:700!important}
+body.silver-mode .tab-btn{font-size:1.05rem!important;padding:14px 26px!important;font-weight:700!important;border-width:3px!important}
+body.silver-mode .result-card{padding:28px!important;border-width:2px!important;border-color:rgba(15,43,30,0.12)!important}
+body.silver-mode .data-number{font-size:2.5rem!important}
+body.silver-mode .data-label{font-size:1.1rem!important;color:#333!important;font-weight:600}
+body.silver-mode .data-source{font-size:0.9rem!important}
+body.silver-mode .nav-badge{font-size:0.9rem!important}
+body.silver-mode .silver-btn{font-size:1rem!important;padding:12px 22px!important;font-weight:700!important;border-width:3px!important}
+body.silver-mode .silver-btn.active{background:var(--terra)!important;color:#fff!important;border-color:var(--terra)!important}
+body.silver-mode .hero-stat-number{font-size:2.2rem!important}
+body.silver-mode .hero-stat-label{font-size:1rem!important}
+body.silver-mode .knowledge-item{padding:28px 20px}
+body.silver-mode .knowledge-icon{font-size:2.5rem!important}
+body.silver-mode .knowledge-name{font-size:1.05rem!important}
+body.silver-mode .knowledge-count{font-size:0.9rem!important}
+body.silver-mode .safety-card h4,body.silver-mode .scenario-card h4{font-size:1.2rem!important}
+body.silver-mode .safety-card p,body.silver-mode .scenario-card p{font-size:1rem!important;color:#333!important}
+body.silver-mode .footer{padding:60px 24px}
+body.silver-mode .footer-logo{font-size:1.5rem!important}
+body.silver-mode .footer-slogan{font-size:1.1rem!important}
+body.silver-mode .footer-links a{font-size:1rem!important}
+body.silver-mode .footer-copyright{font-size:0.9rem!important}
+body.silver-mode .btn-hero{font-size:1.15rem!important;padding:16px 36px!important}
+body.silver-mode .hero-badge{font-size:0.95rem!important;padding:10px 24px!important}
+body.silver-mode .scroll-indicator{display:none}
+body.silver-mode .demo-sidebar{width:280px}
+body.silver-mode .sidebar-item{padding:18px 20px;margin:6px 16px}
+body.silver-mode .sidebar-item .title{font-size:1.1rem}
+body.silver-mode .sidebar-item .desc{font-size:0.85rem}
+body.silver-mode .hero-features{grid-template-columns:repeat(3,1fr);gap:16px}
+body.silver-mode .hero-feature-item{padding:18px 12px}
+body.silver-mode .hero-feature-icon{font-size:2rem}
+body.silver-mode .hero-feature-text{font-size:0.9rem}
+body.silver-mode .cal-region-btn{font-size:1rem!important;padding:12px 24px!important;border-width:3px!important;font-weight:700!important}
+body.silver-mode *{animation-duration:0.01s!important;transition-duration:0.01s!important}
+body.silver-mode .leaf-particle,body.silver-mode .hero::before{display:none!important}
+body.silver-mode .btn-speak{display:inline-flex!important;align-items:center;gap:6px;padding:10px 18px;border-radius:100px;background:linear-gradient(135deg,#ffd54f,#ffb300);color:#1a1a1a;font-weight:700;font-size:1rem;border:2px solid #ffb300;cursor:pointer;box-shadow:0 3px 10px rgba(255,179,0,0.3);transition:all 0.2s}
+body.silver-mode .btn-speak:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,179,0,0.4)}
+body.silver-mode .silver-tip{display:block!important;padding:14px 20px;background:linear-gradient(135deg,rgba(255,243,224,0.9),rgba(255,224,178,0.8));border-left:4px solid #ff9800;border-radius:8px;margin:12px 0;font-size:1.05rem;color:#5d4037;line-height:1.8}
+body.silver-mode .silver-encourage{display:block!important;text-align:center;padding:16px 20px;background:linear-gradient(135deg,rgba(124,182,157,0.12),rgba(212,168,83,0.1));border-radius:12px;margin-top:16px;font-size:1.1rem;color:#2e7d32;font-weight:600}
+body.silver-mode .silver-voice-input{display:inline-flex!important}
+body.silver-mode .section-desc,body.silver-mode p{line-height:2!important}
+body.silver-mode .knowledge-item:hover,body.silver-mode .safety-card:hover,body.silver-mode .scenario-card:hover{transform:none!important;box-shadow:0 4px 20px rgba(0,0,0,0.1)!important}
+.silver-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;padding:20px 36px;border-radius:12px;font-size:1.2rem;font-weight:600;z-index:10001;display:none;max-width:80%;text-align:center}
+.silver-guide-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:none;justify-content:center;align-items:center;padding:20px}
+.silver-guide-card{background:#fffef7;max-width:500px;width:100%;border-radius:20px;padding:32px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.silver-guide-card h3{color:#2e7d32;font-size:1.6rem;margin-bottom:16px;text-align:center}
+.silver-guide-card .guide-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:1.05rem;line-height:1.7;color:#333}
+.silver-guide-card .guide-item .num{background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.silver-guide-card .btn-got-it{display:block;width:100%;padding:16px;margin-top:20px;background:linear-gradient(135deg,#66bb6a,#43a047);color:#fff;border:none;border-radius:100px;font-size:1.2rem;font-weight:700;cursor:pointer}
+body.silver-mode .silver-font-controls{display:flex!important;align-items:center;gap:8px}
+.silver-font-controls{display:none}
+.silver-font-btn{padding:6px 12px;border:2px solid rgba(124,182,157,0.4);background:#fff;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.85rem;transition:all 0.2s}
+.silver-font-btn.active{background:var(--sage);color:#fff;border-color:var(--sage)}
+.silver-font-btn[data-size="small"]{font-size:0.75rem;padding:4px 10px}
+.silver-font-btn[data-size="medium"]{font-size:0.9rem;padding:5px 12px}
+.silver-font-btn[data-size="large"]{font-size:1.05rem;padding:6px 14px}
+body.silver-mode .silver-font-btn{font-size:1rem;padding:8px 16px}
+body.silver-mode .silver-font-btn[data-size="small"]{font-size:0.9rem;padding:6px 12px}
+body.silver-mode .silver-font-btn[data-size="medium"]{font-size:1.05rem;padding:8px 16px}
+body.silver-mode .silver-font-btn[data-size="large"]{font-size:1.25rem;padding:10px 18px}
+.silver-font-size-small{font-size:18px!important}
+.silver-font-size-medium{font-size:20px!important}
+.silver-font-size-large{font-size:23px!important}
+@media(max-width:900px){.section{padding:80px 20px}.hero-stats{gap:24px}.nav-badge{display:none}}
+@media(max-width:600px){.section{padding:60px 16px}.hero h1{letter-spacing:4px}.hero-stats{gap:16px}.hero-stat-number{font-size:1.8rem}.tab-bar{gap:6px}.tab-btn{padding:8px 14px;font-size:0.75rem}.data-banner-inner{grid-template-columns:1fr}}
+/* Additional polish: hover transitions for cards */
+.knowledge-item,.safety-card,.scenario-card,.data-card{transition:transform 0.4s cubic-bezier(0.22,1,0.36,1),box-shadow 0.4s ease,border-color 0.3s ease}
+/* Tab bar scrollable on mobile */
+@media(max-width:600px){.tab-bar{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px}.tab-bar::-webkit-scrollbar{display:none}.tab-btn{flex-shrink:0;white-space:nowrap}}
+/* Card press effect */
+.result-card:active{transform:scale(0.98)!important;transition:transform 0.1s ease}
+/* Gradient text for hero stat numbers */
+.hero-stat-number{background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* Selection color */
+::selection{background:rgba(124,182,157,0.3);color:var(--forest)}
+::-moz-selection{background:rgba(124,182,157,0.3);color:var(--forest)}
+/* Smooth scroll polyfill for older browsers */
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+/* Print styles */
+@media print{.main-nav,.hero-cta,.scroll-indicator,.tab-bar,.cal-region-bar,.silver-btn,.nav-badge,.leaf-particle,.hero::before,.hero-grid{display:none!important}.hero{min-height:auto;padding:40px 24px}.section{padding:40px 0}.footer{background:#fff!important;color:#333!important}.footer a{color:var(--sage)!important}}
+/* Custom scrollbar */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--sage);border-radius:100px}
+::-webkit-scrollbar-thumb:hover{background:var(--forest-mid)}
+/* Focus styles */
+*:focus-visible{outline:3px solid var(--sage);outline-offset:2px;border-radius:4px}
+/* Tooltip for calendar months */
+.cal-note{position:relative}
+</style>
+</head>
+<body>
+<script>(function(){document.documentElement.classList.add('scroll-locked');document.body.classList.add('scroll-locked')})();</script>
+<nav class="main-nav" id="mainNav"><div class="nav-inner"><div class="nav-logo"><div class="logo-icon">&#x1F331;</div><span>&#x9633;&#x53F0;&#x519C;&#x592B; <span class="pro-tag">PRO</span></span></div><div class="nav-right"><button class="silver-btn" id="silverBtn" onclick="toggleSilverMode()"><span id="silverIcon">&#x1F9D3;</span><span id="silverText">&#x94F6;&#x53D1;&#x6A21;&#x5F0F;</span></button><div class="silver-font-controls" id="fontControls"><button class="silver-font-btn" data-size="small" onclick="setSilverFontSize('small')">A</button><button class="silver-font-btn active" data-size="medium" onclick="setSilverFontSize('medium')">A</button><button class="silver-font-btn" data-size="large" onclick="setSilverFontSize('large')">A</button></div><span class="nav-badge">TRAE AI&#x521B;&#x9020;&#x529B;&#x5927;&#x8D5B;</span></div></div></nav>
+<section class="hero" id="hero">
+<div class="hero-grid"></div>
+<div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div><div class="leaf-particle"></div>
+<div class="hero-content">
+<div class="hero-icon"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="46" stroke="rgba(124,182,157,0.3)" stroke-width="1"/><circle cx="50" cy="50" r="38" stroke="rgba(124,182,157,0.15)" stroke-width="0.5"/><path d="M50 20 C30 35, 25 55, 50 80 C75 55, 70 35, 50 20Z" fill="url(#leafGrad2)" opacity="0.9"/><path d="M50 30 L50 70" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/><path d="M50 40 L38 50" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/><path d="M50 50 L62 58" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/><defs><linearGradient id="leafGrad2" x1="50" y1="20" x2="50" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a8d5ba"/><stop offset="100%" stop-color="#7cb69d"/></linearGradient></defs></svg></div>
+<div class="hero-badge"><span class="dot"></span> AI + &#x57CE;&#x5E02;&#x79CD;&#x690D; &middot; &#x667A;&#x80FD;&#x987E;&#x95EE;&#x7CFB;&#x7EDF;</div>
+<h1>&#x517B;&#x690D;&#x7269;&#x4E0D;&#x662F;&#x7384;&#x5B66;&#xFF0C;&#x662F;&#x79D1;&#x5B66;</h1>
+<p class="hero-slogan">&#x57CE;&#x5E02;&#x5BB6;&#x5EAD;&#x79CD;&#x690D;&#x667A;&#x80FD;&#x987E;&#x95EE;&#x4E0E;&#x690D;&#x7269;&#x533B;&#x751F;</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="hero-stat-number">7</div><div class="hero-stat-label">&#x5927;&#x77E5;&#x8BC6;&#x5E93;</div></div>
+<div class="hero-stat"><div class="hero-stat-number">6</div><div class="hero-stat-label">&#x5927;&#x573A;&#x666F;</div></div>
+<div class="hero-stat"><div class="hero-stat-number">5</div><div class="hero-stat-label">&#x5927;&#x5730;&#x533A;</div></div>
+<div class="hero-stat"><div class="hero-stat-number">12</div><div class="hero-stat-label">&#x7EC4;&#x4F34;&#x751F;&#x642D;&#x914D;</div></div>
+<div class="hero-stat"><div class="hero-stat-number">12</div><div class="hero-stat-label">&#x79CD;&#x75C5;&#x866B;&#x5BB3;&#x8BCA;&#x65AD;</div></div>
+</div>
+<div class="hero-cta" style="margin-top:48px;">
+<button class="btn-hero btn-hero-primary btn-enter-demo" onclick="enterDemo()">
+<span class="leaf-float leaf-1">&#x1F343;</span>
+<span class="leaf-float leaf-2">&#x1F33F;</span>
+<span class="leaf-float leaf-3">&#x1F342;</span>
+<span class="btn-text">&#x1F680; 体验交互式Demo</span>
+</button>
+</div></div>
+</section>
+<section class="section demo-section" id="demoZone">
+<div class="section-container">
+<div class="reveal"><div class="section-label">INTERACTIVE DEMO</div><h2 class="section-title">&#x4EA4;&#x4E92;&#x5F0F;Demo&#x4F53;&#x9A8C;&#x533A;</h2><p class="section-desc">&#x4E0B;&#x9762;&#x5C55;&#x793A;&#x4E86;&#x9633;&#x53F0;&#x519C;&#x592B;Pro&#x7684;<strong>7&#x5927;&#x6838;&#x5FC3;&#x529F;&#x80FD;</strong>+<strong>5&#x5927;&#x6269;&#x5C55;&#x6A21;&#x5757;</strong>&#xFF08;&#x5F00;&#x53D1;&#x4E2D;&#xFF09;&#xFF0C;&#x70B9;&#x51FB;&#x5DE6;&#x4FA7;&#x83DC;&#x5355;&#x5207;&#x6362;&#x4F53;&#x9A8C;&#x3002;</p></div>
+<div class="demo-layout reveal" style="transition-delay:0.1s">
+  <nav class="demo-sidebar">
+    <button class="sidebar-item active" data-tab="recommend" onclick="switchTab('recommend')">
+      <span class="icon">&#x1F331;</span>
+      <span class="text"><span class="title">智能推荐</span><span class="desc">33种植物匹配</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="pest" onclick="switchTab('pest')">
+      <span class="icon">&#x1FAB4;</span>
+      <span class="text"><span class="title">病虫害诊断</span><span class="desc">17+种病症识别</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="calendar" onclick="switchTab('calendar')">
+      <span class="icon">&#x1F4C5;</span>
+      <span class="text"><span class="title">种植日历</span><span class="desc">5大地区12个月</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="companion" onclick="switchTab('companion')">
+      <span class="icon">&#x1F33F;</span>
+      <span class="text"><span class="title">伴生种植</span><span class="desc">12+组搭配</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="devices" onclick="switchTab('devices')">
+      <span class="icon">&#x1F4A1;</span>
+      <span class="text"><span class="title">智能设备</span><span class="desc">6种智能工具</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="regrow" onclick="switchTab('regrow')">
+      <span class="icon">&#x1F33E;</span>
+      <span class="text"><span class="title">零废弃水培</span><span class="desc">5种蔬菜再生</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="firstaid" onclick="switchTab('firstaid')">
+      <span class="icon">&#x1FA7A;</span>
+      <span class="text"><span class="title">急救口诀</span><span class="desc">4大急救场景</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="diary" onclick="switchTab('diary')">
+      <span class="icon">&#x1F4D4;</span>
+      <span class="text"><span class="title">种植日记</span><span class="desc">记录生长每一天</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="harvest" onclick="switchTab('harvest')">
+      <span class="icon">&#x1F9EE;</span>
+      <span class="text"><span class="title">收获计算器</span><span class="desc">预测收获时间</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="identify" onclick="switchTab('identify')">
+      <span class="icon">&#x1F4F7;</span>
+      <span class="text"><span class="title">植物识别<span style="font-size:0.6rem;padding:1px 5px;background:var(--terra);color:#fff;border-radius:100px;margin-left:4px;vertical-align:middle;">开发中</span></span><span class="desc">拍照识别植物种类</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="weather" onclick="switchTab('weather')">
+      <span class="icon">&#x1F324;</span>
+      <span class="text"><span class="title">天气联动<span style="font-size:0.6rem;padding:1px 5px;background:var(--terra);color:#fff;border-radius:100px;margin-left:4px;vertical-align:middle;">开发中</span></span><span class="desc">智能种植提醒</span></span>
+    </button>
+    <button class="sidebar-item" data-tab="community" onclick="switchTab('community')">
+      <span class="icon">&#x1F465;</span>
+      <span class="text"><span class="title">种植社区<span style="font-size:0.6rem;padding:1px 5px;background:var(--terra);color:#fff;border-radius:100px;margin-left:4px;vertical-align:middle;">开发中</span></span><span class="desc">分享交流互助</span></span>
+    </button>
+  </nav>
+  <div class="demo-content">
+    <div class="tab-panel active" id="panel-recommend">
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;">
+<div><label class="form-label">&#x9633;&#x53F0;&#x671D;&#x5411;</label><select class="form-select" id="rec-direction"><option value="">&#x8BF7;&#x9009;&#x62E9;</option><option value="south">&#x671D;&#x5357;&#xFF08;&#x5145;&#x8DB3;&#x76F4;&#x5C04;&#xFF09;</option><option value="north">&#x671D;&#x5317;&#xFF08;&#x6563;&#x5C04;&#x5149;&#xFF09;</option><option value="east">&#x671D;&#x4E1C;&#xFF08;&#x4E0A;&#x5348;&#x5149;&#xFF09;</option><option value="west">&#x671D;&#x897F;&#xFF08;&#x4E0B;&#x5348;&#x5149;&#xFF09;</option></select></div>
+<div><label class="form-label">&#x6240;&#x5728;&#x57CE;&#x5E02;</label><select class="form-select" id="rec-city"><option value="guangzhou">&#x5E7F;&#x5DDE;</option><option value="shenzhen">&#x6DF1;&#x5733;</option><option value="beijing">&#x5317;&#x4EAC;</option><option value="shanghai">&#x4E0A;&#x6D77;</option><option value="hangzhou">&#x676D;&#x5DDE;</option><option value="chengdu">&#x6210;&#x90FD;</option><option value="chongqing">&#x91CD;&#x5E86;</option><option value="wuhan">&#x6B66;&#x6C49;</option><option value="xian">&#x897F;&#x5B89;</option><option value="nanjing">&#x5357;&#x4EAC;</option></select></div>
+<div><label class="form-label">&#x79CD;&#x690D;&#x7ECF;&#x9A8C;</label><select class="form-select" id="rec-exp"><option value="newbie">&#x65B0;&#x624B;</option><option value="intermediate">&#x8FDB;&#x9636;</option><option value="expert">&#x8D44;&#x6DF1;</option></select></div>
+<div><label class="form-label">&#x79CD;&#x690D;&#x76EE;&#x7684;</label><select class="form-select" id="rec-purpose"><option value="eat">&#x98DF;&#x7528;</option><option value="ornament">&#x89C2;&#x8D4F;</option><option value="quick">&#x5FEB;&#x901F;&#x6536;&#x6210;</option><option value="education">&#x4EB2;&#x5B50;&#x6559;&#x80B2;</option></select></div>
+<div><label class="form-label">&#x7A7A;&#x95F4;&#x7C7B;&#x578B;</label><select class="form-select" id="rec-space"><option value="open">&#x5F00;&#x653E;&#x9633;&#x53F0;</option><option value="closed">&#x5C01;&#x95ED;&#x9633;&#x53F0;</option><option value="windowsill">&#x7A97;&#x53F0;</option><option value="indoor">&#x5BA4;&#x5185;&#x9760;&#x7A97;</option></select></div>
+</div>
+<div style="text-align:center;margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+  <span style="font-size:0.85rem;color:var(--text-light);align-self:center;">⚡ 快捷示例：</span>
+  <button class="btn-secondary" onclick="setRecExample('south','guangzhou','newbie','eat','open')">广州新手种菜</button>
+  <button class="btn-secondary" onclick="setRecExample('north','beijing','newbie','ornament','windowsill')">北京窗台绿植</button>
+  <button class="btn-secondary" onclick="setRecExample('east','shanghai','intermediate','education','closed')">上海亲子种植</button>
+</div>
+<div style="text-align:center;margin-bottom:32px;"><button class="btn-primary" onclick="generateRecommend()">&#x1F50D; &#x751F;&#x6210;&#x79CD;&#x690D;&#x63A8;&#x8350;</button></div>
+<div id="recommend-result" style="display:none;">
+<div id="recommend-summary" style="background:linear-gradient(135deg,rgba(124,182,157,0.1),rgba(212,168,83,0.06));border-left:4px solid var(--sage);padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:20px;font-size:0.9rem;color:var(--forest-mid);"></div>
+<div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">&#x1F331; &#x4E3A;&#x60A8;&#x63A8;&#x8350;&#x4EE5;&#x4E0B;&#x690D;&#x7269;</div>
+<div id="recommend-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;"></div>
+<div id="recommend-tips" style="display:none;margin-top:24px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">&#x1F4A1; 种植新手必读</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
+    <div class="result-card"><div style="font-size:1.5rem;margin-bottom:8px;">&#x1F31E;</div><strong style="color:var(--forest);font-size:0.9rem;">光照管理</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">南向阳台每天至少6小时直射光，适合番茄辣椒；北向以散射光植物如绿萝、吊兰为主。</p></div>
+    <div class="result-card"><div style="font-size:1.5rem;margin-bottom:8px;">&#x1F4A7;</div><strong style="color:var(--forest);font-size:0.9rem;">浇水原则</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">见干见湿，手指插入土中2cm干燥再浇水。早晨浇水最佳，避免傍晚叶面留水。</p></div>
+    <div class="result-card"><div style="font-size:1.5rem;margin-bottom:8px;">&#x1F331;</div><strong style="color:var(--forest);font-size:0.9rem;">土壤配方</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">通用配方：营养土60%+珍珠岩20%+椰糠20%。盆底垫陶粒，确保排水孔通畅。</p></div>
+    <div class="result-card"><div style="font-size:1.5rem;margin-bottom:8px;">&#x1FAB4;</div><strong style="color:var(--forest);font-size:0.9rem;">换盆时机</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">根系从排水孔伸出、土壤板结、生长停滞时换盆。换盆后遮阴3天，避免强光。</p></div>
+  </div>
+</div>
+</div></div>
+<div class="tab-panel" id="panel-pest">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;">
+<div><label class="form-label">&#x53D7;&#x5BB3;&#x90E8;&#x4F4D;</label><select class="form-select" id="pest-part"><option value="">&#x8BF7;&#x9009;&#x62E9;&#x90E8;&#x4F4D;</option><option value="leaf">&#x53F6;&#x7247;</option><option value="stem">&#x8302;&#x5E72;</option><option value="root">&#x6839;&#x90E8;</option><option value="flower">&#x82B1;&#x6735;</option></select></div>
+<div><label class="form-label">&#x75C7;&#x72B6;&#x7C7B;&#x578B;</label><select class="form-select" id="pest-symptom"><option value="">&#x8BF7;&#x9009;&#x62E9;&#x75C7;&#x72B6;</option><option value="white">&#x767D;&#x8272;&#x7C89;&#x672B;</option><option value="yellow">&#x53D1;&#x9EC4;</option><option value="bug">&#x866B;&#x5B50;/&#x54AC;&#x75D5;</option><option value="spot">&#x6591;&#x70B9;/&#x75C5;&#x6591;</option><option value="hole">&#x5B54;&#x6D1E;/&#x7F3A;&#x5207;</option></select></div>
+<div>
+  <label class="form-label">&#x690D;&#x7269;&#x7C7B;&#x578B;</label>
+  <select class="form-select" id="pest-plant">
+    <option value="vegetable">&#x852C;&#x83DC;&#x7C7B;</option>
+    <option value="herb">&#x9999;&#x8349;&#x7C7B;</option>
+    <option value="foliage">&#x89C2;&#x53F6;&#x7EFF;&#x690D;</option>
+    <option value="succulent">&#x591A;&#x8089;</option>
+    <option value="flower">&#x5F00;&#x82B1;&#x690D;&#x7269;</option>
+  </select>
+</div>
+<div>
+  <label class="form-label">&#x73AF;&#x5883;&#x6761;&#x4EF6;</label>
+  <select class="form-select" id="pest-env">
+    <option value="normal">&#x6B63;&#x5E38;&#x901A;&#x98CE;</option>
+    <option value="humid">&#x9AD8;&#x6E29;&#x6F6E;&#x6E7F;</option>
+    <option value="dry">&#x5E72;&#x71E5;&#x901A;&#x98CE;</option>
+    <option value="poor">&#x901A;&#x98CE;&#x4E0D;&#x826F;</option>
+  </select>
+</div>
+</div>
+<div style="text-align:center;margin-bottom:32px;"><button class="btn-primary" onclick="diagnosePest()">&#x1FA7A; &#x542F;&#x52A8;&#x8BCA;&#x65AD;</button></div>
+<div style="text-align:center;margin:12px 0 20px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+  <span style="font-size:0.85rem;color:var(--text-light);align-self:center;">&#x26A1; &#x5FEB;&#x6377;&#x793A;&#x4F8B;&#xFF1A;</span>
+  <button class="btn-secondary" onclick="setPestExample('leaf','bug','vegetable','normal')">&#x756A;&#x8304;&#x53F6;&#x80CC;&#x6709;&#x5C0F;&#x767D;&#x866B;</button>
+  <button class="btn-secondary" onclick="setPestExample('leaf','white','vegetable','humid')">&#x9EC4;&#x74DC;&#x53F6;&#x7247;&#x957F;&#x767D;&#x7C89;</button>
+  <button class="btn-secondary" onclick="setPestExample('leaf','yellow','foliage','normal')">&#x7EFF;&#x841D;&#x8001;&#x53F6;&#x53D1;&#x9EC4;</button>
+</div>
+<div id="pest-result" style="display:none;"></div>
+<div id="pest-quickref" style="margin-top:32px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">🔍 常见病虫害速查</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
+    <div class="result-card" onclick="setPestExample('leaf','white','vegetable','humid')" style="cursor:pointer;border-left:4px solid var(--gold);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">⚪</span><strong style="color:var(--forest);font-size:0.9rem;">白粉病</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">叶片白色粉状物，高温高湿易发。小苏打水喷洒，加强通风。</p></div>
+    <div class="result-card" onclick="setPestExample('leaf','bug','vegetable','normal')" style="cursor:pointer;border-left:4px solid var(--sage);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🐛</span><strong style="color:var(--forest);font-size:0.9rem;">蚜虫</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">叶背密集小虫，分泌蜜露。强力水流冲洗，黄色粘虫板诱杀。</p></div>
+    <div class="result-card" onclick="setPestExample('leaf','yellow','foliage','normal')" style="cursor:pointer;border-left:4px solid var(--terra-light);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🟡</span><strong style="color:var(--forest);font-size:0.9rem;">叶片发黄</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">老叶发黄缺氮，新叶发黄缺铁。调整浇水，补充有机肥。</p></div>
+    <div class="result-card" onclick="setPestExample('leaf','spot','vegetable','humid')" style="cursor:pointer;border-left:4px solid var(--terra);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🟤</span><strong style="color:var(--forest);font-size:0.9rem;">灰霉病</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">灰褐色斑点长灰霉。立即摘除病叶，降低湿度至50%以下。</p></div>
+    <div class="result-card" onclick="setPestExample('stem','bug','foliage','dry')" style="cursor:pointer;border-left:4px solid #dc2626;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🔴</span><strong style="color:var(--forest);font-size:0.9rem;">红蜘蛛</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">叶背针尖黄斑，有蛛丝。增加湿度至60%以上，印楝油喷洒。</p></div>
+    <div class="result-card" onclick="setPestExample('root','yellow','vegetable','normal')" style="cursor:pointer;border-left:4px solid #7c3aed;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">⚫</span><strong style="color:var(--forest);font-size:0.9rem;">根腐病</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">根系发黑腐烂有臭味。停水脱盆，剪除烂根，换新土重植。</p></div>
+    <div class="result-card" onclick="setPestExample('leaf','hole','vegetable','normal')" style="cursor:pointer;border-left:4px solid #059669;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🐛</span><strong style="color:var(--forest);font-size:0.9rem;">菜青虫</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">叶片不规则孔洞。人工捕捉幼虫，BT菌剂傍晚喷施。</p></div>
+    <div class="result-card" onclick="setPestExample('flower','bug','flower','normal')" style="cursor:pointer;border-left:4px solid #2563eb;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:1.5rem;">🔵</span><strong style="color:var(--forest);font-size:0.9rem;">蓟马</strong></div><p style="font-size:0.8rem;color:var(--text-mid);">花瓣银白条纹，花心可见小黑虫。蓝色粘虫板诱杀，肥皂水喷洒。</p></div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-calendar">
+<div class="cal-region-bar" id="calRegionBar">
+<button class="cal-region-btn active" data-region="south" onclick="showCalendar('south')">&#x534E;&#x5357;</button>
+<button class="cal-region-btn" data-region="east" onclick="showCalendar('east')">&#x534E;&#x4E1C;</button>
+<button class="cal-region-btn" data-region="north" onclick="showCalendar('north')">&#x534E;&#x5317;</button>
+<button class="cal-region-btn" data-region="southwest" onclick="showCalendar('southwest')">&#x897F;&#x5357;</button>
+<button class="cal-region-btn" data-region="northwest" onclick="showCalendar('northwest')">&#x897F;&#x5317;</button>
+</div>
+<div id="calendar-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;"></div>
+<div id="calendar-reminder" style="margin-top:24px;display:none;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">📋 本月种植提醒</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
+    <div class="result-card" style="border-left:4px solid var(--sage);"><div style="font-size:1.3rem;margin-bottom:6px;">🌡️</div><strong style="color:var(--forest);font-size:0.9rem;">气温关注</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">日均温稳定在15°C以上再播种喜温蔬菜，避免倒春寒冻害。</p></div>
+    <div class="result-card" style="border-left:4px solid var(--gold);"><div style="font-size:1.3rem;margin-bottom:6px;">☔</div><strong style="color:var(--forest);font-size:0.9rem;">梅雨防护</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">雨季注意排水，避免盆内积水。可使用遮阳网防暴雨冲刷。</p></div>
+    <div class="result-card" style="border-left:4px solid var(--terra);"><div style="font-size:1.3rem;margin-bottom:6px;">🐛</div><strong style="color:var(--forest);font-size:0.9rem;">病虫害预防</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">定期检查叶背，早发现早处理。新购植物隔离2周再混种。</p></div>
+    <div class="result-card" style="border-left:4px solid var(--forest-mid);"><div style="font-size:1.3rem;margin-bottom:6px;">🧪</div><strong style="color:var(--forest);font-size:0.9rem;">施肥建议</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">生长期每2周施一次稀释液肥，花果期增施磷钾肥促花促果。</p></div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-companion">
+<div style="max-width:400px;margin:0 auto 32px;"><label class="form-label">&#x9009;&#x62E9;&#x4E3B;&#x683D;&#x690D;&#x7269;</label><select class="form-select" id="companion-main" onchange="showCompanion()"><option value="tomato">&#x756A;&#x8304;</option><option value="cucumber">&#x9EC4;&#x74DC;</option><option value="pepper">&#x8FA3;&#x6912;</option><option value="eggplant">&#x8304;&#x5B50;</option><option value="strawberry">&#x8349;&#x8393;</option><option value="lettuce">&#x751F;&#x83DC;</option><option value="beans">&#x8C46;&#x7C7B;</option></select><div style="text-align:center;margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+  <span style="font-size:0.85rem;color:var(--text-light);align-self:center;">⚡ 快捷示例：</span>
+  <button class="btn-secondary" onclick="setCompanionExample('tomato')">番茄配罗勒</button>
+  <button class="btn-secondary" onclick="setCompanionExample('cucumber')">黄瓜配豆类</button>
+  <button class="btn-secondary" onclick="setCompanionExample('strawberry')">草莓配生菜</button>
+</div>
+</div>
+<div id="companion-result" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;"></div>
+<div id="companion-rotation" style="margin-top:32px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">🔄 轮作建议</div>
+  <div class="result-card" style="max-width:700px;margin:0 auto;">
+    <p style="font-size:0.9rem;color:var(--text-mid);margin-bottom:16px;">同一盆土连续种植同科植物会消耗特定养分并积累土传病害。建议每季更换不同科属的植物。</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+      <div style="background:var(--cream);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:4px;">🍅</div><strong style="font-size:0.85rem;color:var(--forest);">茄科</strong><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">番茄/辣椒/茄子</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:4px;">🥬</div><strong style="font-size:0.85rem;color:var(--forest);">十字花科</strong><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">白菜/萝卜/油菜</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:4px;">🥒</div><strong style="font-size:0.85rem;color:var(--forest);">葫芦科</strong><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">黄瓜/丝瓜/南瓜</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:4px;">🫘</div><strong style="font-size:0.85rem;color:var(--forest);">豆科</strong><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">豆角/豌豆/蚕豆</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:12px;text-align:center;"><div style="font-size:1.3rem;margin-bottom:4px;">🥕</div><strong style="font-size:0.85rem;color:var(--forest);">伞形科</strong><div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">香菜/芹菜/胡萝卜</div></div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:rgba(212,168,83,0.08);border-radius:8px;border-left:3px solid var(--gold);">
+      <p style="font-size:0.85rem;color:var(--text-mid);">💡 <strong>轮作原则：</strong>茄科 → 十字花科 → 豆科 → 葫芦科 → 伞形科。豆科能固氮，是其他科的良好前茬。</p>
+    </div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-devices"><div id="devices-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;"></div>
+<div id="devices-guide" style="margin-top:32px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">🛒 设备选购指南</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+    <div class="result-card"><div style="font-size:1.3rem;margin-bottom:8px;">🌱</div><strong style="color:var(--forest);font-size:0.9rem;">新手入门套装</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">土壤湿度传感器 + 自动浇花器。约150元，解决浇水难题，新手最实用。</p></div>
+    <div class="result-card"><div style="font-size:1.3rem;margin-bottom:8px;">🏠</div><strong style="color:var(--forest);font-size:0.9rem;">封闭阳台必备</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">LED补光灯 + 小型循环扇。解决光照不足和通风问题，约200元。</p></div>
+    <div class="result-card"><div style="font-size:1.3rem;margin-bottom:8px;">🌞</div><strong style="color:var(--forest);font-size:0.9rem;">南向阳台进阶</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:6px;">智能环境监测仪 + 自动遮阳帘。实时数据+智能调控，约350元。</p></div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-regrow">
+<div style="max-width:400px;margin:0 auto 32px;"><label class="form-label">&#x9009;&#x62E9;&#x84D4;&#x83DC;</label><select class="form-select" id="regrow-veg" onchange="showRegrow()"><option value="scallion">&#x5C0F;&#x8471;</option><option value="lettuce">&#x751F;&#x83DC;</option><option value="coriander">&#x9999;&#x83DC;</option><option value="celery">&#x82B9;&#x83DC;</option><option value="basil">&#x7F57;&#x52D2;</option></select><div style="text-align:center;margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+  <span style="font-size:0.85rem;color:var(--text-light);align-self:center;">⚡ 快捷示例：</span>
+  <button class="btn-secondary" onclick="setRegrowExample('scallion')">小葱再生</button>
+  <button class="btn-secondary" onclick="setRegrowExample('lettuce')">生菜再生</button>
+  <button class="btn-secondary" onclick="setRegrowExample('basil')">罗勒水培</button>
+</div>
+</div>
+<div id="regrow-result"></div>
+<div id="regrow-faq" style="margin-top:32px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">❓ 常见问题</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
+    <div class="result-card"><strong style="color:var(--forest);font-size:0.9rem;">Q: 水培蔬菜发臭怎么办？</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:8px;">每天换水，清洗容器。若已发臭，切除腐烂部分，换清水加少量活性炭。</p></div>
+    <div class="result-card"><strong style="color:var(--forest);font-size:0.9rem;">Q: 再生蔬菜能种几次？</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:8px;">一般2-3轮后营养耗尽。建议第2轮后转土培，或补充营养液。</p></div>
+    <div class="result-card"><strong style="color:var(--forest);font-size:0.9rem;">Q: 为什么只长叶不结果？</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:8px;">水培蔬菜多为叶菜类，结果需转土培并补充磷钾肥。水培以收叶为主。</p></div>
+    <div class="result-card"><strong style="color:var(--forest);font-size:0.9rem;">Q: 什么蔬菜最适合新手？</strong><p style="font-size:0.82rem;color:var(--text-mid);margin-top:8px;">小葱和生菜最容易，3-5天发芽，对水质要求低，容错率高。</p></div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-firstaid">
+<div id="firstaid-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:24px;"></div>
+<div id="firstaid-detail" style="display:none;"></div>
+<div id="firstaid-quick" style="margin-top:32px;">
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1.1rem;margin-bottom:16px;">⚡ 症状快速判断</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+    <div class="result-card" style="border-left:4px solid #f59e0b;cursor:pointer;" onclick="showFirstaidDetail('yellow-leaf')"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:1.5rem;">🟡</span><strong style="color:var(--forest);">叶子发黄</strong></div><p style="font-size:0.8rem;color:var(--text-light);margin-top:6px;">老叶黄→缺氮；新叶黄→缺铁；整株黄→水多</p></div>
+    <div class="result-card" style="border-left:4px solid #dc2626;cursor:pointer;" onclick="showFirstaidDetail('wilting')"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:1.5rem;">🥀</span><strong style="color:var(--forest);">植物萎蔫</strong></div><p style="font-size:0.8rem;color:var(--text-light);margin-top:6px;">土干→浇水；土湿→烂根；中午萎→正常</p></div>
+    <div class="result-card" style="border-left:4px solid #7c3aed;cursor:pointer;" onclick="showFirstaidDetail('bugs')"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:1.5rem;">🐛</span><strong style="color:var(--forest);">发现虫子</strong></div><p style="font-size:0.8rem;color:var(--text-light);margin-top:6px;">会飞→白粉虱/蓟马；会跳→蚜虫；有丝→红蜘蛛</p></div>
+    <div class="result-card" style="border-left:4px solid #059669;cursor:pointer;" onclick="showFirstaidDetail('root-rot')"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:1.5rem;">⚫</span><strong style="color:var(--forest);">根部发黑</strong></div><p style="font-size:0.8rem;color:var(--text-light);margin-top:6px;">停水→脱盆→剪烂根→消毒→换新土</p></div>
+  </div>
+</div>
+</div>
+<div class="tab-panel" id="panel-identify">
+  <div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:4rem;margin-bottom:20px;">&#x1F4F7;</div>
+    <h3 style="color:var(--forest);margin-bottom:12px;">AI植物识别</h3>
+    <p style="color:var(--text-mid);max-width:400px;margin:0 auto 24px;">拍摄植物叶片或花朵，AI自动识别植物种类，提供养护建议。支持3000+常见植物。</p>
+    <div style="background:var(--cream);border-radius:var(--radius);padding:24px;max-width:500px;margin:0 auto;border:2px dashed rgba(124,182,157,0.3);">
+      <div style="font-size:2rem;margin-bottom:12px;">&#x1F4E4;</div>
+      <p style="color:var(--text-light);font-size:0.9rem;">拖拽或点击上传植物照片<br>支持 JPG、PNG 格式</p>
+    </div>
+    <div style="margin-top:24px;"><span class="tag-yellow" style="font-size:0.85rem;">&#x1F527; 功能开发中，敬请期待</span></div>
+    <div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:600px;margin:32px auto 0;">
+      <div class="result-card"><div style="font-size:1.5rem;">&#x1F33F;</div><strong style="font-size:0.85rem;color:var(--forest);">识别准确率</strong><div style="font-size:0.75rem;color:var(--text-light);">目标 > 95%</div></div>
+      <div class="result-card"><div style="font-size:1.5rem;">&#x1F4DA;</div><strong style="font-size:0.85rem;color:var(--forest);">植物数据库</strong><div style="font-size:0.75rem;color:var(--text-light);">目标 3000+ 种</div></div>
+      <div class="result-card"><div style="font-size:1.5rem;">&#x1F4A1;</div><strong style="font-size:0.85rem;color:var(--forest);">养护建议</strong><div style="font-size:0.75rem;color:var(--text-light);">个性化方案</div></div>
+    </div>
+  </div>
+</div>
+<div class="tab-panel" id="panel-diary">
+  <h3 style="color:var(--forest);margin-bottom:8px;font-family:'Noto Serif SC',serif;">&#x1F4D4; 种植日记</h3>
+  <p style="color:var(--text-mid);font-size:0.9rem;margin-bottom:20px;">记录每一次浇水、施肥、修剪和收获，自动生成生长曲线，形成专属种植档案。</p>
+  <!-- 添加新日记表单 -->
+  <div style="background:var(--cream);border-radius:var(--radius);padding:20px;margin-bottom:24px;">
+    <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:0.95rem;margin-bottom:14px;">&#x270F; 添加今日记录</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div><label class="form-label">选择植物</label><select class="form-select" id="diary-plant"><option value="tomato">&#x1F345; 小番茄</option><option value="lettuce">&#x1F96C; 生菜</option><option value="cucumber">&#x1F952; 黄瓜</option><option value="mint">&#x1F33F; 薄荷</option><option value="pepper">&#x1F336; 辣椒</option><option value="basil">&#x1F33F; 罗勒</option></select></div>
+      <div><label class="form-label">操作类型</label><select class="form-select" id="diary-action"><option value="water">&#x1F4A7; 浇水</option><option value="fertilize">&#x1F9EA; 施肥</option><option value="prune">&#x2702; 修剪</option><option value="harvest">&#x1F33E; 收获</option><option value="photo">&#x1F4F8; 拍照打卡</option><option value="note">&#x1F4DD; 备注</option></select></div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px;">
+      <div><label class="form-label">记录内容</label><input type="text" class="form-select" id="diary-content" placeholder="今天植物的状态如何？" style="padding:10px 14px;"></div>
+      <div><label class="form-label">日期</label><input type="date" class="form-select" id="diary-date" value="2026-07-14" style="appearance:auto;padding-right:18px;"></div>
+    </div>
+    <div style="text-align:right;"><button class="btn-primary" onclick="addDiaryEntry()" style="font-size:0.85rem;padding:8px 20px;">&#x2795; 添加记录</button></div>
+  </div>
+  <!-- 统计概览 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px;">
+    <div class="result-card" style="text-align:center;border-left:4px solid var(--sage);"><div style="font-size:1.6rem;font-weight:700;color:var(--sage);" id="diary-total-count">12</div><div style="font-size:0.8rem;color:var(--text-light);">总记录数</div></div>
+    <div class="result-card" style="text-align:center;border-left:4px solid var(--gold);"><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">5</div><div style="font-size:0.8rem;color:var(--text-light);">种植中</div></div>
+    <div class="result-card" style="text-align:center;border-left:4px solid var(--terra);"><div style="font-size:1.6rem;font-weight:700;color:var(--terra);">3</div><div style="font-size:0.8rem;color:var(--text-light);">已收获</div></div>
+    <div class="result-card" style="text-align:center;border-left:4px solid var(--forest-mid);"><div style="font-size:1.6rem;font-weight:700;color:var(--forest-mid);">28</div><div style="font-size:0.8rem;color:var(--text-light);">连续打卡(天)</div></div>
+  </div>
+  <!-- 我的植物列表 -->
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1rem;margin-bottom:14px;">&#x1F331; 我的植物</div>
+  <div id="diary-plants" style="display:grid;gap:12px;margin-bottom:24px;">
+    <div class="result-card" style="border-left:4px solid #dc2626;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><span style="font-size:1.5rem;">&#x1F345;</span><div style="flex:1;"><strong style="color:var(--forest);">小番茄 #1</strong><div style="font-size:0.75rem;color:var(--text-light);">播种：2026-03-15 · 已生长 121 天 · &#x1F7E2; 结果期</div></div><span style="font-size:0.7rem;padding:3px 10px;border-radius:100px;background:rgba(220,38,38,0.1);color:#dc2626;font-weight:600;">结果中</span></div>
+      <div style="height:6px;background:var(--cream);border-radius:100px;overflow:hidden;margin-bottom:8px;"><div style="height:100%;width:85%;background:linear-gradient(90deg,var(--sage),#dc2626);border-radius:100px;transition:width 0.5s;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-light);margin-bottom:8px;"><span>播种</span><span>开花</span><span style="color:#dc2626;font-weight:600;">结果 &#x25CF;</span><span>收获</span></div>
+      <div style="font-size:0.8rem;color:var(--text-mid);">&#x1F4A7; 昨天浇水 · &#x1F9EA; 3天前施肥 · 已结果12颗</div>
+    </div>
+    <div class="result-card" style="border-left:4px solid var(--sage);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><span style="font-size:1.5rem;">&#x1F96C;</span><div style="flex:1;"><strong style="color:var(--forest);">生菜</strong><div style="font-size:0.75rem;color:var(--text-light);">播种：2026-06-20 · 已生长 24 天 · &#x1F7E1; 生长期</div></div><span style="font-size:0.7rem;padding:3px 10px;border-radius:100px;background:rgba(124,182,157,0.15);color:var(--sage);font-weight:600;">生长中</span></div>
+      <div style="height:6px;background:var(--cream);border-radius:100px;overflow:hidden;margin-bottom:8px;"><div style="height:100%;width:55%;background:linear-gradient(90deg,var(--sage),var(--forest-mid));border-radius:100px;transition:width 0.5s;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-light);margin-bottom:8px;"><span>播种</span><span style="color:var(--sage);font-weight:600;">生长 &#x25CF;</span><span>成熟</span><span>收获</span></div>
+      <div style="font-size:0.8rem;color:var(--text-mid);">&#x1F4A7; 今天浇水 · 叶片翠绿，长势良好</div>
+    </div>
+    <div class="result-card" style="border-left:4px solid var(--gold);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><span style="font-size:1.5rem;">&#x1F33F;</span><div style="flex:1;"><strong style="color:var(--forest);">薄荷</strong><div style="font-size:0.75rem;color:var(--text-light);">播种：2026-04-10 · 已生长 95 天 · &#x2705; 可持续收获</div></div><span style="font-size:0.7rem;padding:3px 10px;border-radius:100px;background:rgba(212,168,83,0.15);color:var(--gold);font-weight:600;">可收获</span></div>
+      <div style="font-size:0.8rem;color:var(--text-mid);">&#x2702; 5天前修剪 · &#x1F4A7; 昨天浇水 · 新芽已长出5cm</div>
+    </div>
+  </div>
+  <!-- 时间线 -->
+  <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1rem;margin-bottom:14px;">&#x1F4C5; 最近动态</div>
+  <div id="diary-timeline" style="position:relative;padding-left:24px;border-left:2px solid var(--cream);margin-bottom:24px;">
+    <div style="position:relative;padding:0 0 16px 16px;" id="diary-timeline-entries"></div>
+  </div>
+  <!-- 种植小贴士 -->
+  <div style="background:linear-gradient(135deg,rgba(124,182,157,0.08),rgba(212,168,83,0.06));border-radius:var(--radius);padding:16px 20px;border-left:4px solid var(--sage);">
+    <div style="font-weight:700;color:var(--forest);font-size:0.9rem;margin-bottom:8px;">&#x1F4A1; 坚持记录的好处</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+      <div style="font-size:0.82rem;color:var(--text-mid);">&#x1F4CA; <strong>发现规律</strong>：掌握浇水频率和施肥周期</div>
+      <div style="font-size:0.82rem;color:var(--text-mid);">&#x1F3C6; <strong>积累经验</strong>：每种植物的成功/失败记录</div>
+      <div style="font-size:0.82rem;color:var(--text-mid);">&#x1F4C8; <strong>优化方案</strong>：根据数据调整养护策略</div>
+    </div>
+  </div>
+</div>
+<div class="tab-panel" id="panel-weather">
+  <div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:4rem;margin-bottom:20px;">&#x1F324;</div>
+    <h3 style="color:var(--forest);margin-bottom:12px;">天气联动种植助手</h3>
+    <p style="color:var(--text-mid);max-width:400px;margin:0 auto 24px;">接入当地天气预报，根据气温、降水、光照自动推荐今日种植操作。</p>
+    <div style="max-width:500px;margin:0 auto;">
+      <div class="result-card" style="text-align:left;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="font-size:2rem;">&#x2600;&#xFE0F;</span><div><strong style="color:var(--forest);">今日种植建议</strong><div style="font-size:0.8rem;color:var(--text-light);">广州市 · 晴 · 28°C · 湿度65%</div></div></div>
+        <div style="background:var(--cream);border-radius:8px;padding:12px;">
+          <p style="font-size:0.85rem;color:var(--text-mid);">&#x2705; 适宜浇水（早晨7-8点）<br>&#x2705; 适宜施肥<br>&#x26A0;&#xFE0F; 午后高温，注意遮阴<br>&#x274C; 不宜移栽（高温易萎蔫）</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div class="result-card" style="text-align:center;padding:16px 8px;"><div style="font-size:1.3rem;">&#x1F321;</div><div style="font-size:0.8rem;font-weight:600;">气温预警</div></div>
+        <div class="result-card" style="text-align:center;padding:16px 8px;"><div style="font-size:1.3rem;">&#x1F4A7;</div><div style="font-size:0.8rem;font-weight:600;">降雨提醒</div></div>
+        <div class="result-card" style="text-align:center;padding:16px 8px;"><div style="font-size:1.3rem;">&#x1F31E;</div><div style="font-size:0.8rem;font-weight:600;">光照分析</div></div>
+      </div>
+    </div>
+    <div style="margin-top:24px;"><span class="tag-yellow" style="font-size:0.85rem;">&#x1F527; 功能开发中，敬请期待</span></div>
+  </div>
+</div>
+<div class="tab-panel" id="panel-harvest">
+  <h3 style="color:var(--forest);margin-bottom:8px;font-family:'Noto Serif SC',serif;">&#x1F9EE; 收获计算器</h3>
+  <p style="color:var(--text-mid);font-size:0.9rem;margin-bottom:20px;">输入播种日期和植物种类，自动计算预计收获时间、产量估算和成本分析。</p>
+  <!-- 输入区 -->
+  <div style="background:var(--cream);border-radius:var(--radius);padding:20px;margin-bottom:24px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div><label class="form-label">植物种类</label><select class="form-select" id="harvest-plant" onchange="calculateHarvest()"><option value="tomato">&#x1F345; 小番茄</option><option value="lettuce">&#x1F96C; 生菜</option><option value="cucumber">&#x1F952; 黄瓜</option><option value="chili">&#x1F336; 辣椒</option><option value="eggplant">&#x1F346; 茄子</option><option value="bokchoy">&#x1F96C; 小白菜</option><option value="mint">&#x1F33F; 薄荷</option><option value="basil">&#x1F33F; 罗勒</option></select></div>
+      <div><label class="form-label">播种日期</label><input type="date" class="form-select" id="harvest-date" value="2026-05-01" onchange="calculateHarvest()" style="appearance:auto;padding-right:18px;"></div>
+      <div><label class="form-label">容器大小</label><select class="form-select" id="harvest-pot" onchange="calculateHarvest()"><option value="small">小盆（直径15cm）</option><option value="medium" selected>中盆（直径25cm）</option><option value="large">大盆（直径35cm）</option><option value="planter">长条花箱（60cm）</option></select></div>
+    </div>
+    <div style="text-align:center;margin-top:8px;"><button class="btn-primary" onclick="calculateHarvest()">&#x1F4CA; 开始计算</button></div>
+  </div>
+  <!-- 计算结果 -->
+  <div id="harvest-result" style="display:none;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;">
+      <div class="result-card" style="text-align:center;border-top:4px solid var(--sage);">
+        <div style="font-size:2rem;font-weight:700;color:var(--sage);" id="harvest-days">--</div>
+        <div style="font-size:0.8rem;color:var(--text-light);margin-top:4px;">预计生长天数</div>
+        <div style="font-size:0.75rem;color:var(--sage);margin-top:4px;" id="harvest-eta">--</div>
+      </div>
+      <div class="result-card" style="text-align:center;border-top:4px solid var(--gold);">
+        <div style="font-size:2rem;font-weight:700;color:var(--gold);" id="harvest-yield">--</div>
+        <div style="font-size:0.8rem;color:var(--text-light);margin-top:4px;">预计产量</div>
+        <div style="font-size:0.75rem;color:var(--gold);margin-top:4px;" id="harvest-yield-note">--</div>
+      </div>
+      <div class="result-card" style="text-align:center;border-top:4px solid var(--terra);">
+        <div style="font-size:2rem;font-weight:700;color:var(--terra);" id="harvest-cost">--</div>
+        <div style="font-size:0.8rem;color:var(--text-light);margin-top:4px;">预估总成本</div>
+        <div style="font-size:0.75rem;color:var(--terra);margin-top:4px;" id="harvest-cost-detail">--</div>
+      </div>
+      <div class="result-card" style="text-align:center;border-top:4px solid var(--forest-mid);">
+        <div style="font-size:2rem;font-weight:700;color:var(--forest-mid);" id="harvest-save">--</div>
+        <div style="font-size:0.8rem;color:var(--text-light);margin-top:4px;">预估节省</div>
+        <div style="font-size:0.75rem;color:var(--forest-mid);margin-top:4px;">对比超市价</div>
+      </div>
+    </div>
+    <!-- 进度条 -->
+    <div style="margin-bottom:24px;">
+      <div style="font-family:'Noto Serif SC',serif;font-weight:700;color:var(--forest);font-size:1rem;margin-bottom:10px;">&#x1F4CB; 生长进度</div>
+      <div class="result-card">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-light);margin-bottom:8px;"><span>播种</span><span>发芽</span><span>生长</span><span>开花/成熟</span><span>收获</span></div>
+        <div style="height:10px;background:var(--cream);border-radius:100px;overflow:hidden;margin-bottom:8px;"><div id="harvest-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--gold),var(--terra));border-radius:100px;transition:width 0.8s ease;"></div></div>
+        <div style="font-size:0.85rem;color:var(--forest-mid);" id="harvest-progress-text">--</div>
+      </div>
+    </div>
+    <!-- 养护提醒 -->
+    <div style="background:linear-gradient(135deg,rgba(124,182,157,0.08),rgba(212,168,83,0.06));border-radius:var(--radius);padding:16px 20px;border-left:4px solid var(--gold);">
+      <div style="font-weight:700;color:var(--forest);font-size:0.9rem;margin-bottom:8px;">&#x1F4A1; 当前阶段养护提醒</div>
+      <div id="harvest-tips" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;font-size:0.82rem;color:var(--text-mid);"></div>
+    </div>
+  </div>
+  <!-- 默认提示 -->
+  <div id="harvest-placeholder" style="text-align:center;padding:30px 20px;">
+    <p style="color:var(--text-light);font-size:0.9rem;">&#x2191; 选择植物和日期后自动计算</p>
+  </div>
+</div>
+<div class="tab-panel" id="panel-community">
+  <div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:4rem;margin-bottom:20px;">&#x1F465;</div>
+    <h3 style="color:var(--forest);margin-bottom:12px;">阳台农夫社区</h3>
+    <p style="color:var(--text-mid);max-width:400px;margin:0 auto 24px;">连接城市种植爱好者，分享种植成果、交换种子、互助答疑。</p>
+    <div style="max-width:600px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;">
+        <div class="result-card" style="text-align:center;"><div style="font-size:1.5rem;">&#x1F33F;</div><strong style="font-size:0.85rem;color:var(--forest);">种植分享</strong><div style="font-size:0.75rem;color:var(--text-light);">晒成果 学经验</div></div>
+        <div class="result-card" style="text-align:center;"><div style="font-size:1.5rem;">&#x1F504;</div><strong style="font-size:0.85rem;color:var(--forest);">种子交换</strong><div style="font-size:0.75rem;color:var(--text-light);">邻里互助 零废弃</div></div>
+        <div class="result-card" style="text-align:center;"><div style="font-size:1.5rem;">&#x2753;</div><strong style="font-size:0.85rem;color:var(--forest);">问答互助</strong><div style="font-size:0.75rem;color:var(--text-light);">老带新 共成长</div></div>
+        <div class="result-card" style="text-align:center;"><div style="font-size:1.5rem;">&#x1F3C6;</div><strong style="font-size:0.85rem;color:var(--forest);">种植挑战</strong><div style="font-size:0.75rem;color:var(--text-light);">月度主题 赢徽章</div></div>
+      </div>
+      <div class="result-card" style="text-align:left;">
+        <div style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;">&#x1F525; 热门话题</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="tag-green">#春播大作战</span>
+          <span class="tag-green">#番茄种植日记</span>
+          <span class="tag-green">#零废弃水培</span>
+          <span class="tag-green">#阳台改造</span>
+          <span class="tag-green">#银发园丁</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;"><span class="tag-yellow" style="font-size:0.85rem;">&#x1F527; 功能开发中，敬请期待</span></div>
+  </div>
+</div>
+  </div>
+</div>
+</div></section>
+
+<section class="data-banner"><div class="data-banner-inner">
+<div class="data-card reveal"><div class="data-number">62%</div><div class="data-label">&#x57CE;&#x5E02;&#x5BB6;&#x5EAD;&#x79CD;&#x690D;&#x5931;&#x8D25;&#x7387;</div><div class="data-source">&#x6570;&#x636E;&#x6765;&#x6E90;&#xFF1A;&#x4E2D;&#x56FD;&#x519C;&#x79D1;&#x9662;</div></div>
+<div class="data-card reveal" style="transition-delay:0.1s;"><div class="data-number">200&#x4EBF;</div><div class="data-label">&#x5BB6;&#x5EAD;&#x79CD;&#x690D;&#x5E02;&#x573A;&#x89C4;&#x6A21;&#xFF08;&#x5143;&#xFF09;</div><div class="data-source">&#x57CE;&#x5E02;&#x519C;&#x4E1A;&#x53D1;&#x5C55;&#x62A5;&#x544A;</div></div>
+<div class="data-card reveal" style="transition-delay:0.2s;"><div class="data-number">3.5&#x4EBF;</div><div class="data-label">&#x5168;&#x56FD;&#x57CE;&#x9547;&#x5C45;&#x6C11;&#x5BB6;&#x5EAD;</div><div class="data-source">&#x56FD;&#x5BB6;&#x7EDF;&#x8BA1;&#x5C40;</div></div>
+<div class="data-card reveal" style="transition-delay:0.3s;"><div class="data-number">85%</div><div class="data-label">&#x65B0;&#x624B;&#x613F;&#x610F;&#x5C1D;&#x8BD5;&#x79CD;&#x690D;</div><div class="data-source">&#x793E;&#x4F1A;&#x8C03;&#x67E5;&#x62A5;&#x544A;</div></div>
+</div></section>
+<section class="section knowledge-section" id="knowledgeZone"><div class="section-container">
+<div class="reveal"><div class="section-label">KNOWLEDGE SYSTEM</div><h2 class="section-title">7&#x5927;&#x77E5;&#x8BC6;&#x5E93;&#x4F53;&#x7CFB;</h2><p class="section-desc">&#x8986;&#x76D6;&#x79CD;&#x3001;&#x517B;&#x3001;&#x8BCA;&#x3001;&#x9632;&#x5168;&#x6D41;&#x7A0B;&#xFF0C;&#x6BCF;&#x4E2A;&#x77E5;&#x8BC6;&#x5E93;&#x5747;&#x5305;&#x542B;&#x4E30;&#x5BCC;&#x7684;&#x4E13;&#x4E1A;&#x6570;&#x636E;&#x3002;</p></div>
+<div class="knowledge-grid">
+<div class="knowledge-item reveal" style="transition-delay:0.05s;"><div class="knowledge-icon">&#x1F331;</div><div class="knowledge-name">&#x690D;&#x7269;&#x63A8;&#x8350;</div><div class="knowledge-count">30+&#x54C1;&#x79CD;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.1s;"><div class="knowledge-icon">&#x1FA7A;</div><div class="knowledge-name">&#x75C5;&#x866B;&#x5BB3;&#x8BCA;&#x65AD;</div><div class="knowledge-count">17+&#x79CD;&#x75C7;&#x72B6;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.15s;"><div class="knowledge-icon">&#x1F4C5;</div><div class="knowledge-name">&#x79CD;&#x690D;&#x65E5;&#x5386;</div><div class="knowledge-count">5&#x5927;&#x5730;&#x533A;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.2s;"><div class="knowledge-icon">&#x1F33F;</div><div class="knowledge-name">&#x4F34;&#x751F;&#x79CD;&#x690D;</div><div class="knowledge-count">12+&#x7EC4;&#x642D;&#x914D;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.25s;"><div class="knowledge-icon">&#x1F4A1;</div><div class="knowledge-name">&#x667A;&#x80FD;&#x8BBE;&#x5907;</div><div class="knowledge-count">6&#x79CD;&#x8BBE;&#x5907;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.3s;"><div class="knowledge-icon">&#x1F33E;</div><div class="knowledge-name">&#x96F6;&#x5E9F;&#x5F03;&#x6C34;&#x57F9;</div><div class="knowledge-count">5&#x79CD;&#x84D4;&#x83DC;</div></div>
+<div class="knowledge-item reveal" style="transition-delay:0.35s;"><div class="knowledge-icon">&#x2764;&#xFE0F;</div><div class="knowledge-name">&#x6025;&#x6551;&#x53E3;&#x8BC0;</div><div class="knowledge-count">4&#x5927;&#x573A;&#x666F;</div></div>
+</div></div></section>
+<section class="section safety-section"><div class="section-container">
+<div class="reveal"><div class="section-label">SAFETY BOUNDARY</div><h2 class="section-title">&#x5B89;&#x5168;&#x8FB9;&#x754C;&#x8BBE;&#x8BA1;</h2><p class="section-desc">&#x660E;&#x786E;&#x80FD;&#x505A;&#x4EC0;&#x4E48;&#x3001;&#x4E0D;&#x505A;&#x4EC0;&#x4E48;&#xFF0C;&#x662F;&#x5BF9;&#x7528;&#x6237;&#x8D1F;&#x8D23;&#x7684;&#x4EA7;&#x54C1;&#x3002;</p></div>
+<div class="safety-grid">
+<div class="safety-card reveal" style="transition-delay:0.1s;"><h4>&#x1F6D1; &#x660E;&#x786E;&#x5EFA;&#x7ACB;&#x5B89;&#x5168;&#x8FB9;&#x754C;</h4><p>&#x4E0D;&#x66FF;&#x4EE3;&#x533B;&#x7597;&#x8BCA;&#x65AD;&#x3001;&#x4E0D;&#x63D0;&#x4F9B;&#x5904;&#x65B9;&#x3001;&#x4E0D;&#x63A8;&#x8350;&#x5316;&#x5B66;&#x519C;&#x836F;&#xFF0C;&#x6240;&#x6709;&#x5EFA;&#x8BAE;&#x5747;&#x4E3A;&#x65E5;&#x5E38;&#x79CD;&#x690D;&#x53C2;&#x8003;&#x3002;</p></div>
+<div class="safety-card reveal" style="transition-delay:0.15s;"><h4>&#x1F9E0; &#x79D1;&#x5B66;&#x6570;&#x636E;&#x9A71;&#x52A8;</h4><p>&#x878D;&#x5408;FAO IPM&#x7EFC;&#x5408;&#x9632;&#x6CBB;&#x4F53;&#x7CFB;&#x3001;&#x56FD;&#x5BB6;&#x519C;&#x4E1A;&#x6807;&#x51C6;&#xFF0C;&#x4E25;&#x683C;&#x53C2;&#x8003;&#x6743;&#x5A01;&#x6570;&#x636E;&#x6E90;&#x3002。</p></div>
+<div class="safety-card reveal" style="transition-delay:0.2s;"><h4>&#x1F9D3; &#x94F6;&#x53D1;&#x65E0;&#x969C;&#x788D;&#x6A21;&#x5F0F;</h4><p>&#x5927;&#x5B57;&#x4F53;&#x3001;&#x9AD8;&#x5BF9;&#x6BD4;&#x5EA6;&#x3001;&#x7B80;&#x5316;&#x64CD;&#x4F5C;&#xFF0C;&#x8BA9;&#x6BCF;&#x4F4D;&#x957F;&#x8F88;&#x90FD;&#x80FD;&#x4EAB;&#x53D7;&#x79CD;&#x690D;&#x4E50;&#x8DA3;&#x3002;</p></div>
+</div></div></section>
+<section class="section scenario-section"><div class="section-container">
+<div class="reveal"><div class="section-label">REAL SCENARIOS</div><h2 class="section-title">&#x771F;&#x5B9E;&#x5E94;&#x7528;&#x573A;&#x666F;</h2><p class="section-desc">&#x4ECE;&#x57CE;&#x5E02;&#x5BB6;&#x5EAD;&#x7684;&#x771F;&#x5B9E;&#x9700;&#x6C42;&#x51FA;&#x53D1;&#xFF0C;&#x89E3;&#x51B3;&#x6BCF;&#x4E00;&#x4E2A;&#x79CD;&#x690D;&#x75DB;&#x70B9;&#x3002;</p></div>
+<div class="scenario-grid">
+<div class="scenario-card reveal" style="transition-delay:0.1s;"><h4>&#x1F3E0; &#x65B0;&#x624B;&#x9996;&#x6B21;&#x79CD;&#x690D;</h4><p>&#x201C;&#x6211;&#x7684;&#x7B2C;&#x4E00;&#x76C6;&#x7EFF;&#x841D;&#x6D3B;&#x4E86;3&#x5929;&#xFF0C;&#x8FD9;&#x662F;&#x6211;&#x4EBA;&#x751F;&#x7B2C;&#x4E00;&#x6B21;&#x79CD;&#x690D;&#x3002;&#x201D; &#x2014;&#x2014; &#x5C0F;&#x767D;&#x9886;&#xFF0C;25&#x5C81;&#xFF0C;&#x4E0A;&#x6D77;</p></div>
+<div class="scenario-card reveal" style="transition-delay:0.15s;"><h4>&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467; &#x4EB2;&#x5B50;&#x98DF;&#x80B2;</h4><p>&#x201C;&#x5B69;&#x5B50;&#x6BCF;&#x5929;&#x65E9;&#x4E0A;&#x8DD1;&#x53BB;&#x770B;&#x4ED6;&#x7684;&#x5C0F;&#x767D;&#x83DC;&#xFF0C;&#x6BD4;&#x73A9;&#x624B;&#x673A;&#x65F6;&#x95F4;&#x957F;&#x3002;&#x201D; &#x2014;&#x2014; &#x674E;&#x5988;&#x5988;&#xFF0C;35&#x5C81;&#xFF0C;&#x5317;&#x4EAC;</p></div>
+<div class="scenario-card reveal" style="transition-delay:0.2s;"><h4>&#x1F9D3; &#x94F6;&#x53D1;&#x56ED;&#x4E01;</h4><p>&#x201C;&#x9000;&#x4F11;&#x540E;&#x79CD;&#x4E86;&#x756A;&#x8304;&#xFF0C;&#x5206;&#x4EAB;&#x7ED9;&#x8001;&#x4F19;&#x4F34;&#x4EEC;&#xFF0C;&#x5927;&#x5BB6;&#x90FD;&#x8BF4;&#x5F88;&#x751C;&#x3002;&#x201D; &#x2014;&#x2014; &#x738B;&#x5927;&#x7237;&#xFF0C;68&#x5C81;&#xFF0C;&#x6210;&#x90FD;</p></div>
+</div></div></section>
+<footer class="footer">
+<div class="footer-logo">&#x9633;&#x53F0;&#x519C;&#x592B;</div>
+<p class="footer-slogan">&#x8BA9;&#x6BCF;&#x4E00;&#x5BF8;&#x9633;&#x53F0;&#xFF0C;&#x90FD;&#x6210;&#x4E3A;&#x4F60;&#x7684;&#x7EFF;&#x8272;&#x7530;&#x56ED;</p>
+<div style="max-width:420px;margin:28px auto;padding:20px 28px;background:rgba(255,255,255,0.06);border:1px solid rgba(124,182,157,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--forest-mid));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">&#x1F331;</div>
+<div style="text-align:left;">
+<div style="color:var(--white);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:8px;"><span>Kamfai</span><span style="font-size:0.7rem;padding:2px 8px;background:rgba(124,182,157,0.2);border-radius:100px;color:var(--sage-light);font-weight:400;">Creator</span></div>
+<a href="https://github.com/Zgdfsgd/balcony-farmer" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--sage-light);text-decoration:none;font-size:0.85rem;margin-top:4px;transition:color 0.3s ease;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg><span>github.com/Zgdfsgd/balcony-farmer</span></a>
+</div></div>
+<div class="footer-links"><a href="https://github.com/Zgdfsgd/balcony-farmer" target="_blank">&#x1F517; &#x5F00;&#x6E90;Skill&#x5730;&#x5740;</a><a href="#">&#x1F33F; FAO IPM &#x6807;&#x51C6;</a><a href="#">&#x1F331; IFOAM &#x6709;&#x673A;&#x8BA4;&#x8BC1;</a></div>
+<div style="margin-bottom:20px;"><span style="display:inline-block;padding:6px 16px;background:rgba(124,182,157,0.15);border:1px solid rgba(124,182,157,0.3);border-radius:100px;color:var(--sage-light);font-size:0.8rem;">&#x57FA;&#x4E8E; TRAE AI &#x6784;&#x5EFA; &middot; &#x793E;&#x4F1A;&#x516C;&#x76CA;&#x53C2;&#x8D5B;</span></div>
+<p class="footer-copyright">BALCONY FARMER &copy; 2026 &mdash; &#x521B;&#x4F5C;&#x8005;&#xFF1A;Kamfai &middot; &#x5F00;&#x6E90;Skill&#xFF1A;<a href="https://github.com/Zgdfsgd/balcony-farmer" target="_blank" style="color:rgba(255,255,255,0.4);text-decoration:none;">github.com/Zgdfsgd/balcony-farmer</a></p>
+</footer>
+<script>
+// Scroll reveal
+var observerOptions={threshold:0.1,rootMargin:'0px 0px -50px 0px'};
+var revealObserver=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible')}})},observerOptions);
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(function(el){revealObserver.observe(el)});
+// Nav scroll
+window.addEventListener('scroll',function(){var nav=document.getElementById('mainNav');if(window.scrollY>100){nav.classList.add('scrolled')}else{nav.classList.remove('scrolled')}});
+// Silver mode - no implicit event
+var silverModeActive=false;
+var silverFontSize='medium';
+var silverFirstTime=true;
+var plainLangMap={
+'IPM':'安全防虫三步法',
+'IPM维度':'防虫手段',
+'维度':'方面',
+'伴生种植':'搭配种植',
+'互利共生':'长得更好、少长虫',
+'伴生':'搭档',
+'菜青虫':'绿色小毛毛虫',
+'吸树虫':'吸汁的小虫子',
+'白粉病':'白色粉末病',
+'照度':'光线强度',
+'土壤湿度':'土摸起来微微潮',
+'安全间隔期':'喷完药之后几天才能摘来吃',
+'苏云金芽孢杆菌':'一种对人和植物无害的细菌药',
+'蓖麻油酸':'蓖麻的酸',
+'天敔':'天敌',
+'蛴螬':'吃光叶子的毒虫子',
+'红蜘蛛':'很小的红色虫子',
+'除草部':'拔草',
+'工艺措施':'手工方法',
+'生物防治':'用好虫吃坏虫',
+'物理防治':'用物理方法防虫',
+'化学防治':'用药水喷',
+'防治方案':'怎么处理',
+'急救口诀':'急救方法',
+'置信区间':'可靠程度',
+'相关系数':'匹配程度'
+};
+var originalHTML={};
+function saveOriginalHTML(){var panels=document.querySelectorAll('.tab-panel');panels.forEach(function(p,idx){originalHTML['panel-'+idx]=p.innerHTML});}
+function applyPlainLang(){document.querySelectorAll('.tab-panel').forEach(function(p){if(!p.dataset.original)p.dataset.original=p.innerHTML;var html=p.innerHTML;for(var k in plainLangMap){if(plainLangMap.hasOwnProperty(k)&&k){html=html.split(k).join(plainLangMap[k])}}p.innerHTML=html})}
+function restorePlainLang(){document.querySelectorAll('.tab-panel').forEach(function(p){if(p.dataset.original){p.innerHTML=p.dataset.original;delete p.dataset.original}})}
+function silverSpeak(text){if(!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=0.85;u.pitch=1.1;u.volume=1;speechSynthesis.speak(u);showSilverToast('🔊 正在朗读中...')}
+function showSilverToast(msg){var t=document.getElementById('silverToast');if(!t){t=document.createElement('div');t.id='silverToast';t.className='silver-toast';document.body.appendChild(t)}t.innerHTML=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},2000)}
+function addSpeakButtons(){document.querySelectorAll('.result-card').forEach(function(card){if(!card.querySelector('.btn-speak')){var btn=document.createElement('button');btn.className='btn-speak';btn.style.cssText='display:none;margin-top:8px;';btn.innerHTML='🔊 听结果';btn.onclick=function(e){e.stopPropagation();var txt=card.innerText.replace(/🔊.*$/,'').replace(/点击展开.*$/,'').trim();silverSpeak(txt)};card.appendChild(btn)}})}
+function removeSpeakButtons(){document.querySelectorAll('.btn-speak').forEach(function(b){b.remove()})}
+function reorderSidebarForSilver(){var sidebar=document.querySelector('nav.demo-sidebar');if(!sidebar)return;if(!sidebar.dataset.originalOrder){sidebar.dataset.originalOrder=sidebar.innerHTML}var order=['pest','recommend','calendar','firstaid','regrow','diary','companion','harvest','devices','identify','weather','community'];var items={};sidebar.querySelectorAll('.sidebar-item').forEach(function(btn){var tab=btn.dataset.tab;if(tab)items[tab]=btn.outerHTML});var html='';order.forEach(function(t){if(items[t])html+=items[t]});sidebar.innerHTML=html;sidebar.querySelectorAll('.sidebar-item').forEach(function(btn){btn.addEventListener('click',function(){switchTab(btn.dataset.tab)})})}
+function restoreSidebarOrder(){var sidebar=document.querySelector('nav.demo-sidebar');if(!sidebar||!sidebar.dataset.originalOrder)return;sidebar.innerHTML=sidebar.dataset.originalOrder;sidebar.querySelectorAll('.sidebar-item').forEach(function(btn){btn.addEventListener('click',function(){switchTab(btn.dataset.tab)})})}
+function addSilverEncouragement(){var resultPanels=['#pest-result','#recommend-result','#harvest-result'];resultPanels.forEach(function(sel){var el=document.querySelector(sel);if(el&&!el.querySelector('.silver-encourage')){var div=document.createElement('div');div.className='silver-encourage';div.style.display='none';div.innerHTML='🌱 别担心，按照上面的方法，您的小植物很快就会好起来的！';el.appendChild(div)}})}
+function setSilverFontSize(size){silverFontSize=size;document.body.classList.remove('silver-font-size-small','silver-font-size-medium','silver-font-size-large');document.body.classList.add('silver-font-size-'+size);document.querySelectorAll('.silver-font-btn').forEach(function(b){b.classList.toggle('active',b.dataset.size===size)})}
+function showSilverGuide(){var overlay=document.getElementById('silverGuideOverlay');if(!overlay){overlay=document.createElement('div');overlay.id='silverGuideOverlay';overlay.className='silver-guide-overlay';overlay.innerHTML='<div class="silver-guide-card"><h3>🌱 银发园丁模式已开启</h3><div class="guide-item"><div class="num">1</div><div><strong>字更大、看得清</strong><br>全屏字体放大，高对比度保护眼睛</div></div><div class="guide-item"><div class="num">2</div><div><strong>操作简单、学得快</strong><br>常用功能放前，每步都有提示</div></div><div class="guide-item"><div class="num">3</div><div><strong>能听能看、更方便</strong><br>点击「听结果」，不用老花镜</div></div><button class="btn-got-it" onclick="closeSilverGuide()">我知道了 ✔</button></div>';document.body.appendChild(overlay)}overlay.style.display='flex';}
+function closeSilverGuide(){var o=document.getElementById('silverGuideOverlay');if(o)o.style.display='none'}
+
+
+function applyPlainLangToElement(el){if(!el)return;var html=el.innerHTML;for(var k in plainLangMap){if(plainLangMap.hasOwnProperty(k)&&k){html=html.split(k).join(plainLangMap[k])}}el.innerHTML=html}
+
+function addSpeakToResult(container){if(!container)return;var cards=container.querySelectorAll('.result-card');if(cards.length===0)return;cards.forEach(function(card){if(!card.querySelector('.btn-speak')){var btn=document.createElement('button');btn.className='btn-speak';btn.style.cssText='display:inline-flex;margin-top:12px;';btn.innerHTML='🔊 听结果';btn.onclick=function(e){e.stopPropagation();var txt=card.innerText.replace(/🔊.*$/,'').replace(/点击展开.*$/,'').trim();silverSpeak(txt)};card.appendChild(btn)}})}
+
+function toggleSilverMode(){silverModeActive=!silverModeActive;document.body.classList.toggle('silver-mode',silverModeActive);var btn=document.getElementById('silverBtn');var icon=document.getElementById('silverIcon');var text=document.getElementById('silverText');if(silverModeActive){btn.classList.add('active');icon.innerHTML='⬇️';text.innerHTML='退出银发';addSpeakButtons();applyPlainLang();reorderSidebarForSilver();addSilverEncouragement();setSilverFontSize('medium');if(silverFirstTime){setTimeout(function(){showSilverGuide();silverFirstTime=false},500)}showSilverToast('✅ 银发园丁模式已开启');window.scrollTo({top:0,behavior:'smooth'})}else{btn.classList.remove('active');icon.innerHTML='🧓';text.innerHTML='银发模式';removeSpeakButtons();restorePlainLang();restoreSidebarOrder();document.querySelectorAll('.silver-encourage').forEach(function(e){e.remove()});document.body.classList.remove('silver-font-size-small','silver-font-size-medium','silver-font-size-large');showSilverToast('✅ 已退出银发模式')}}
+function enterDemo(){document.documentElement.classList.remove('scroll-locked');document.body.classList.remove('scroll-locked');document.getElementById('demoZone').scrollIntoView({behavior:'smooth'})}
+// Tab switching - no implicit event
+function switchTab(tab){var tabs=['recommend','pest','calendar','companion','devices','regrow','firstaid','diary','harvest','identify','weather','community'];tabs.forEach(function(t){var p=document.getElementById('panel-'+t);if(p)p.classList.remove('active')});document.querySelectorAll('.demo-sidebar .sidebar-item').forEach(function(btn){btn.classList.remove('active')});var tp=document.getElementById('panel-'+tab);if(tp)tp.classList.add('active');var tb=document.querySelector('.sidebar-item[data-tab="'+tab+'"]');if(tb)tb.classList.add('active');if(tab==='devices')showDevices();if(tab==='regrow')showRegrow();if(tab==='firstaid')renderFirstaidCards();if(tab==='diary')renderDiaryTimeline();if(tab==='harvest')calculateHarvest()}
+function scrollToDemoAndSwitch(tab){enterDemo();setTimeout(function(){switchTab(tab)},400)}
+</script><script>
+var cityClimate={guangzhou:'south',shenzhen:'south',nanjing:'east',shanghai:'east',hangzhou:'east',beijing:'north',wuhan:'central',chengdu:'southwest',chongqing:'southwest',xian:'northwest'};
+var plantMasterDB=[
+{name:'小白菜',emoji:'\uD83E\uDD6C',difficulty:'\u2B50',cycle:'30-45天',tip:'生长极快，新手建立信心首选',toxic:false,light:['south','east','west','north'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['open','closed','windowsill']},
+{name:'生菜',emoji:'\uD83E\uDD6C',difficulty:'\u2B50',cycle:'40-50天',tip:'春秋最佳，夏季需遮阴',toxic:false,light:['south','east','west','north'],climate:['east','north','south','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed','windowsill','indoor']},
+{name:'空心菜',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'25-35天',tip:'耐湿热，华南夏季首选',toxic:false,light:['south','east','west'],climate:['south','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed']},
+{name:'菠菜',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'30-40天',tip:'耐寒，北方春秋冬三季可种',toxic:false,light:['south','east','west','north'],climate:['north','northwest','east'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed','windowsill']},
+{name:'油麦菜',emoji:'\uD83E\uDD6C',difficulty:'\u2B50',cycle:'35-45天',tip:'口感清脆，略带苦味，耐热性好',toxic:false,light:['south','east','west'],climate:['south','east','north','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed','windowsill']},
+{name:'木耳菜',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'40-60天',tip:'耐阴耐热，北向阳台也能种',toxic:false,light:['north','east','west'],climate:['south','east','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed','windowsill','indoor']},
+{name:'薄荷',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'全年可收',tip:'驱蚊+泡茶两用，极易养护',toxic:false,light:['south','east','west','north'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','ornament','quick','education'],space:['open','closed','windowsill','indoor']},
+{name:'罗勒',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'全年可收',tip:'驱虫+料理提香，意面好搭档',toxic:false,light:['south','east','west'],climate:['south','east','north','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','ornament','education'],space:['open','closed','windowsill']},
+{name:'香菜',emoji:'\uD83C\uDF3F',difficulty:'\u2B50\u2B50',cycle:'30-40天',tip:'喜凉，春秋种植，种子可自留',toxic:false,light:['south','east','west','north'],climate:['north','east','northwest','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed','windowsill']},
+{name:'小葱',emoji:'\uD83E\uDDC5',difficulty:'\u2B50',cycle:'20-30天',tip:'随吃随剪，再生能力强',toxic:false,light:['south','east','west','north'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['open','closed','windowsill','indoor']},
+{name:'紫苏',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'40-60天',tip:'紫苏炒鸭蛋绝佳，驱虫效果好',toxic:false,light:['south','east','west'],climate:['south','east','southwest','north'],exp:['newbie','intermediate','expert'],purpose:['eat','ornament'],space:['open','closed','windowsill']},
+{name:'韭菜',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'60天首次收，之后持续',tip:'割了又长，一次种植多年收获',toxic:false,light:['south','east','west','north'],climate:['north','east','south','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','education'],space:['open','closed','windowsill']},
+{name:'小番茄',emoji:'\uD83C\uDF45',difficulty:'\u2B50\u2B50',cycle:'60-80天',tip:'产量高，成就感强，需搭架',toxic:true,note:'茎叶有毒，果实安全',light:['south','east','west'],climate:['south','east','north','southwest','northwest'],exp:['intermediate','expert'],purpose:['eat','education'],space:['open']},
+{name:'辣椒',emoji:'\uD83C\uDF36\uFE0F',difficulty:'\u2B50\u2B50',cycle:'60-90天',tip:'喜热，产量高，可观赏可食用',toxic:false,light:['south','east','west'],climate:['south','southwest','east'],exp:['intermediate','expert'],purpose:['eat','ornament','education'],space:['open','closed']},
+{name:'黄瓜',emoji:'\uD83E\uDD52',difficulty:'\u2B50\u2B50',cycle:'50-70天',tip:'需搭架攀爬，产量极高',toxic:false,light:['south','east','west'],climate:['south','east','north','southwest'],exp:['intermediate','expert'],purpose:['eat','quick'],space:['open']},
+{name:'茄子',emoji:'\uD83C\uDF46',difficulty:'\u2B50\u2B50',cycle:'70-90天',tip:'喜热，需大盆，结果期长',toxic:false,light:['south','east','west'],climate:['south','east','southwest'],exp:['intermediate','expert'],purpose:['eat'],space:['open']},
+{name:'草莓',emoji:'\uD83C\uDF53',difficulty:'\u2B50\u2B50',cycle:'3-4月结果',tip:'酸甜可口，亲子首选',toxic:false,light:['south','east','west'],climate:['east','north','south','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','ornament','education'],space:['open','closed','windowsill']},
+{name:'豆角',emoji:'\uD83E\uDEDB',difficulty:'\u2B50\u2B50',cycle:'50-70天',tip:'固氮增肥，需搭架，产量高',toxic:false,light:['south','east','west'],climate:['south','east','north','southwest'],exp:['intermediate','expert'],purpose:['eat','education'],space:['open']},
+{name:'樱桃萝卜',emoji:'\uD83D\uDFE5',difficulty:'\u2B50',cycle:'25-35天',tip:'红皮白心，生长极快，适合亲子',toxic:false,light:['south','east','west'],climate:['north','east','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['open','closed','windowsill']},
+{name:'红薯叶',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'30天可收',tip:'超市红薯就能发，营养极高',toxic:false,light:['south','east','west'],climate:['south','east','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick'],space:['open','closed']},
+{name:'土豆',emoji:'\uD83E\uDD54',difficulty:'\u2B50',cycle:'60-90天',tip:'发芽土豆切块即可种',toxic:true,note:'发芽部分有毒，不可食用',light:['south','east','west'],climate:['north','east','northwest','southwest'],exp:['newbie','intermediate','expert'],purpose:['eat','education'],space:['open']},
+{name:'绿豆芽',emoji:'\uD83C\uDF31',difficulty:'\u2B50',cycle:'3-5天',tip:'零光照可种，3天收成',toxic:false,light:['north','south','east','west'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['indoor','windowsill','closed','open']},
+{name:'黄豆芽',emoji:'\uD83C\uDF31',difficulty:'\u2B50',cycle:'4-6天',tip:'蛋白质丰富，遮光培育',toxic:false,light:['north','south','east','west'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['indoor','windowsill','closed','open']},
+{name:'小麦草',emoji:'\uD83C\uDF31',difficulty:'\u2B50',cycle:'7-10天',tip:'猫咪爱吃，榨汁养生',toxic:false,light:['north','south','east','west'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education','ornament'],space:['indoor','windowsill','closed','open']},
+{name:'绿萝',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'多年生',tip:'散射光即可，新手首选',toxic:true,note:'汁液有毒，避免宠物误食',light:['north','east','west'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['ornament'],space:['indoor','windowsill','closed','open']},
+{name:'吊兰',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'多年生',tip:'净化空气，极易繁殖',toxic:false,light:['north','east','west','south'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['ornament','education'],space:['indoor','windowsill','closed','open']},
+{name:'多肉植物',emoji:'\uD83D\uDFDC',difficulty:'\u2B50',cycle:'多年生',tip:'耐旱少浇水，阳光充足最佳',toxic:false,light:['south','east','west'],climate:['north','northwest','east','southwest'],exp:['newbie','intermediate','expert'],purpose:['ornament','education'],space:['open','windowsill','closed']},
+{name:'虎皮兰',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'多年生',tip:'耐旱耐阴，几乎不死',toxic:false,light:['north','east','west','south'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['ornament'],space:['indoor','windowsill','closed','open']},
+{name:'铜钱草',emoji:'\uD83C\uDF3F',difficulty:'\u2B50',cycle:'多年生',tip:'半水半土，生长爆盆',toxic:false,light:['east','west','south','north'],climate:['south','east','southwest','north'],exp:['newbie','intermediate','expert'],purpose:['ornament','education'],space:['indoor','windowsill','closed','open']},
+{name:'大蒜',emoji:'\uD83E\uDDC4',difficulty:'\u2B50',cycle:'15-20天收蒜苗',tip:'厨房大蒜直接种，孩子直观观察',toxic:false,light:['south','east','west','north'],climate:['south','east','north','southwest','northwest'],exp:['newbie','intermediate','expert'],purpose:['eat','quick','education'],space:['open','closed','windowsill','indoor']},
+{name:'蘑菇',emoji:'\uD83C\uDF44',difficulty:'\u2B50\u2B50',cycle:'10-15天',tip:'菌包喷水即出菇，阴凉处培育',toxic:false,light:['north'],climate:['south','east','north','southwest','northwest'],exp:['intermediate','expert'],purpose:['eat','education'],space:['indoor','closed']}
+];
+</script><script>
+var pestDB={
+'leaf-white':{name:'白粉病',desc:'叶片表面出现白色粉末状物，是典型真菌性病害。高温（20-28°C）高湿环境易爆发，通风不良会加速传播。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'需要天然药剂防治，小苏打水喷洒后建议间隔7天再食用。',safetyTips:['小苏打水需在清晨或傍晚喷洒，避免强光','使用后7天内不要食用处理过的叶片','严重时剪除病叶销毁，勿堆肥','增加通风是预防白粉病最关键的措施','硫磺粉使用温度不可超过30°C'],treatment:[{level:1,name:'物理防治',method:'摘除病叶销毁，保持株间通风，避免叶面浇水'},{level:2,name:'天然药剂',method:'1L水+5g小苏打+几滴肥皂液，每7天喷1次；或1:9牛奶水喷雾（阳光下效果更佳）'},{level:3,name:'化学防治',method:'硫磺粉撒布（温度低于30°C时使用），或三唑酮按说明稀释，安全间隔期14天'}]},
+'leaf-yellow':{name:'缺氮/浇水过多',desc:'老叶均匀发黄通常是缺氮；新叶发黄但叶脉仍绿是缺铁；整株发黄萎蔫且土壤潮湿是浇水过多导致根系缺氧。',level:'low',safetyLevel:'green',safetyLabel:'绿色安全',safetyDesc:'物理方法即可解决，无需使用任何药剂，对家庭环境完全安全。',safetyTips:['调整浇水频率，遵循"干透浇透"原则','使用腐熟有机肥（如蚯蚓粪）补充养分','淘米水需稀释3倍以上再使用','确保盆底有排水孔，避免托盘积水','缺铁时浇灌硫酸亚铁1000倍液'],treatment:[{level:1,name:'物理防治',method:'调整浇水频率，见干见湿；增加光照时长'},{level:2,name:'生物防治',method:'施用腐熟有机肥或蚯蚓粪'},{level:3,name:'天然药剂',method:'稀释淘米水灌溉（3倍稀释），或海藻肥喷施'}]},
+'leaf-bug':{name:'蚜虫侵害',desc:'叶片背面或嫩茎密集绿色/黑色/黄色小虫（体长1-3mm），分泌蜜露导致煤污病，严重时叶片卷曲变形。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'需要及时防治，肥皂水无毒无害，喷洒后建议间隔5天再食用。',safetyTips:['肥皂水使用无香型纯皂，避免添加剂伤害植物','喷洒后5天内不要食用处理过的叶片','黄色粘虫板放置在距植株30-50cm处','优先用强力水流冲洗，减少药剂使用','新购植物隔离2周后再靠近其他植物'],treatment:[{level:1,name:'物理防治',method:'强力水流冲洗叶背（每2天1次，连冲3次），黄色粘虫板诱杀'},{level:2,name:'生物防治',method:'释放瓢虫（每平方米5-10只），或喷洒苦参碱'},{level:3,name:'天然药剂',method:'1L水+5ml无香肥皂液喷洒，每3天1次，连喷3次；或印楝油稀释液'}]},
+'leaf-spot':{name:'灰霉病',desc:'叶片出现灰褐色水渍状斑点，潮湿环境下表面长出灰色霉层，从凋谢花朵或伤口处开始感染。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'严重时需使用生物杀菌剂，严格按说明使用，安全间隔期14天。',safetyTips:['立即隔离病株，防止传染其他植物','如使用杀菌剂，严格按说明书稀释比例','安全间隔期14天内禁止食用处理过的植物','操作时佩戴手套，避免皮肤接触','摘除的病部装袋密封丢弃，勿堆肥'],treatment:[{level:1,name:'物理防治',method:'立即移除病叶病果并销毁，增加通风，降低湿度至50%以下'},{level:2,name:'生物防治',method:'喷洒枯草芽孢杆菌或木霉菌，每7天1次'},{level:3,name:'天然药剂',method:'1%小苏打水+0.1%植物油乳液喷洒；肉桂粉撒布土表（天然抗真菌）'}]},
+'leaf-hole':{name:'菜青虫/夜蛾幼虫',desc:'叶片出现不规则孔洞和缺失，叶背可见绿色/褐色虫体及黑色粪便颗粒。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'人工捕捉最安全，BT菌剂为生物农药相对安全，使用后建議间隔7天。',safetyTips:['人工捕捉幼虫是最安全有效的方法','BT菌剂为生物农药，对人体相对安全','使用后7天内不要食用处理过的叶片','傍晚喷药效果最佳，幼虫夜间取食','严重时防虫网覆盖预防成虫产卵'],treatment:[{level:1,name:'物理防治',method:'人工捕捉幼虫（夜间检查效果更好），防虫网覆盖'},{level:2,name:'生物防治',method:'喷洒苏云金杆菌（BT）制剂，傍晚喷施'},{level:3,name:'天然药剂',method:'辣椒水+大蒜水混合喷洒（5个干辣椒+1头蒜+1L水浸泡24小时，稀释1:5）'}]},
+'stem-white':{name:'介壳虫（吹绵蚧）',desc:'茎干或叶腋出现白色/褐色小凸起（似蜡质），不易拨落，分泌蜜露引发煤污病。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'少量可手工清除，酒精擦拭最有效。',safetyTips:['75%酒精擦拭最安全有效','少量时手工清除，避免大面积喷药','检查新购植物，介壳虫易随新植物带入','保持通风能有效预防','严重时剪除受害枝条'],treatment:[{level:1,name:'物理防治',method:'75%酒精棉签逐个擦拭（少量时最有效），或肥皂水+酒精混合液（1L水+5ml皂+10ml酒精）'},{level:2,name:'生物防治',method:'释放澳洲瓢虫或寄生蜂'},{level:3,name:'天然药剂',method:'印楝油喷雾，每7天1次，连喷3次'}]},
+'stem-yellow':{name:'茎腐病',desc:'茎基部或茎干出现黄褐色至黑色斑块，逐渐软腐凹陷，上部叶片发黄萎蔫。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'真菌性病害，需立即处理，严重时需剪除整株。',safetyTips:['立即剪除病部，工具用酒精消毒','剪口处涂抹肉桂粉或木炭粉防感染','处理后的病株隔离观察2周','改善通风，降低湿度是关键','严重时需连盆土一起更换'],treatment:[{level:1,name:'物理防治',method:'剪除病茎至健康部位，伤口涂抹肉桂粉或木炭粉'},{level:2,name:'生物防治',method:'木霉菌拌入新土'},{level:3,name:'天然药剂',method:'高锰酸钾500倍液涂抹病部，或波尔多液喷洒'}]},
+'stem-bug':{name:'红蜘蛛（叶螨）',desc:'叶背出现针尖大小黄白斑点，有极细蛛丝，严重时叶片枯黄脱落。干燥环境最易发。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'繁殖极快，需持续防治。增加湿度是最有效预防手段。',safetyTips:['红蜘蛛繁殖极快，发现后立即处理','增加空气湿度至60%以上是最有效的预防','印楝油使用后7天内不要食用处理部位','严重感染时考虑淘汰病株防止扩散','定期检查叶背，早发现早处理'],treatment:[{level:1,name:'物理防治',method:'高压水冲洗叶背（每2天1次，连冲5次），增加环境湿度至60%以上'},{level:2,name:'生物防治',method:'释放捕食螨（智利小植绥螨）'},{level:3,name:'天然药剂',method:'印楝油稀释液重点喷叶背，每5-7天1次；或肥皂水喷洒'}]},
+'stem-spot':{name:'茎枯病',desc:'茎干上出现椭圆形或不规则形褐色凹陷斑，边缘明显，严重时环茎一周导致整株枯死。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'真菌性病害，需立即处理，剪除病部后注意工具消毒。',safetyTips:['剪除病部后工具必须用酒精消毒','剪口涂抹木炭粉或肉桂粉','病部剪除后隔离观察1-2周','避免茎干受伤，伤口是病菌入侵通道','冬季彻底清园，销毁病枝'],treatment:[{level:1,name:'物理防治',method:'剪除病茎至健康部位，伤口涂抹杀菌剂'},{level:2,name:'生物防治',method:'喷洒枯草芽孢杆菌预防'},{level:3,name:'天然药剂',method:'波尔多液（1:1:100）喷洒，或铜制剂按说明使用'}]},
+'stem-hole':{name:'钻心虫/天牛幼虫',desc:'茎干上出现圆形蛀孔，孔口有新鲜虫粪排出，上部叶片萎蔫枯死。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'幼虫钻入茎干内部，需物理清除。',safetyTips:['发现蛀孔立即用铁丝钩出幼虫','注入BT菌剂或肥皂水到蛀孔内','剪除严重受害的枝条销毁','成虫期人工捕捉','定期检查茎干，早发现早处理'],treatment:[{level:1,name:'物理防治',method:'用细铁丝从蛀孔钩出幼虫，或用注射器注入肥皂水'},{level:2,name:'生物防治',method:'向蛀孔注入BT菌剂'},{level:3,name:'天然药剂',method:'辣椒水注入蛀孔驱杀幼虫'}]},
+'root-white':{name:'根腐病（早期）',desc:'根系表面出现白色菌丝，根表皮开始变褐，地上部分尚无明显症状或轻微生长停滞。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'早期发现可挽救，需立即处理。',safetyTips:['立即停止浇水，检查根系','白色菌丝可用高锰酸钾清除','换土后控水1周再恢复正常浇水','改善排水是预防关键','处理后隔离观察2周'],treatment:[{level:1,name:'物理防治',method:'脱盆清除白色菌丝，剪除初变褐根，换新土'},{level:2,name:'生物防治',method:'木霉菌或枯草芽孢杆菌拌入新土'},{level:3,name:'天然药剂',method:'高锰酸钾1000倍液浸根10分钟，或肉桂粉涂抹剪口'}]},
+'root-yellow':{name:'根腐病（中晚期）',desc:'根系发黑腐烂有腐臭味，叶片从下部开始发黄萎蔫，浇水后不易恢复，整株生长停滞。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'需立即换土重植，严重时整株无法挽救。',safetyTips:['立即停止浇水，检查根系','脱盆检查，剪除所有黑色腐烂根','换用全新消毒过的土壤','如使用杀菌剂浸根，14天内不要食用','改善排水条件是预防的关键','旧土及盆器需彻底消毒后才能再次使用'],treatment:[{level:1,name:'物理防治',method:'脱盆修根（剪除所有黑色软腐根），换新土重植，控水1周'},{level:2,name:'生物防治',method:'木霉菌拌入新土预防复发'},{level:3,name:'天然药剂',method:'高锰酸钾1000倍液浸根10分钟，或3%双氧水1:2稀释浸泡根部10分钟'}]},
+'root-bug':{name:'根线虫/根蛆',desc:'根系出现大小不一的瘤状物（根结），或根表有白色小蛆蠕动，植株生长缓慢、矮小、中午萎蔫。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'根线虫需综合防治，轮作和土壤消毒是根本。',safetyTips:['剪除根瘤后换新土','旧土不可再用，需暴晒或蒸汽消毒','花盆用稀释漂白水浸泡消毒','轮作种植不同科植物','万寿菊根系分泌物可驱线虫'],treatment:[{level:1,name:'物理防治',method:'剪除根瘤，换新土重植，旧土暴晒消毒'},{level:2,name:'生物防治',method:'淡紫拟青霉灌根，或种植万寿菊驱虫'},{level:3,name:'天然药剂',method:'印楝粕拌土（5%比例），或苦参碱灌根'}]},
+'root-spot':{name:'枯萎病（真菌性）',desc:'根系和大根出现褐色坏死斑，茎基部维管束变褐，单侧叶片先萎蔫后整株枯死。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'土传病害，一旦发病难以根治，预防为主。',safetyTips:['发现病株立即隔离','病株及盆土需装袋密封丢弃','避免连作，同一盆土不可种同科植物','工具使用后必须消毒','新土使用前最好暴晒或蒸汽消毒'],treatment:[{level:1,name:'物理防治',method:'立即拔除病株销毁，换全新盆土'},{level:2,name:'生物防治',method:'枯草芽孢杆菌或木霉菌灌根预防'},{level:3,name:'天然药剂',method:'高锰酸钾800倍液灌根，或波尔多液浇灌'}]},
+'flower-white':{name:'白粉病（花果期）',desc:'花蕾和幼果表面出现白色粉状物，花朵畸形无法正常开放，幼果发育受阻。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'花果期需谨慎用药，尽量使用天然药剂。',safetyTips:['花果期优先使用小苏打水等天然药剂','喷洒时避开强光时段','疏除过密花蕾增加通风','使用天然药剂后7天可食用果实','严重时摘除病花病果'],treatment:[{level:1,name:'物理防治',method:'摘除病花病果，增加通风，降低湿度'},{level:2,name:'生物防治',method:'喷洒枯草芽孢杆菌'},{level:3,name:'天然药剂',method:'1L水+5g小苏打+几滴肥皂液喷洒，每7天1次；或牛奶1:9稀释液'}]},
+'flower-yellow':{name:'缺素症（花果期）',desc:'花朵提前褪色发黄、花瓣边缘干枯、花蕾脱落。多因营养不均衡或光照不足。',level:'low',safetyLevel:'green',safetyLabel:'绿色安全',safetyDesc:'调整养护即可恢复，无需用药。',safetyTips:['花果期增加磷钾肥（如骨粉、草木灰）','减少氮肥，避免徒长落花','保证充足光照（每日至少4小时）','盆土勿过湿或过干','定期补充微量元素'],treatment:[{level:1,name:'物理防治',method:'增加光照至每日4-6小时，调整浇水频率'},{level:2,name:'生物防治',method:'施用有机磷钾肥（骨粉、草木灰）'},{level:3,name:'天然药剂',method:'海藻肥或鱼蛋白肥稀释800倍喷施叶面'}]},
+'flower-bug':{name:'蓟马侵害',desc:'花瓣出现银白色条纹/斑块，花朵畸形变色，花心可见极小黑色虫体和排泄物。',level:'mid',safetyLevel:'yellow',safetyLabel:'中等注意',safetyDesc:'蓟马体型极小，需仔细检查花心部位。',safetyTips:['蓝色粘虫板比黄色更吸引蓟马','检查花心和花瓣基部','清除周边杂草减少虫源','严重时剪除受害花蕾','避免偏施氮肥导致嫩芽过多'],treatment:[{level:1,name:'物理防治',method:'蓝色粘虫板诱杀，高压水冲洗花心'},{level:2,name:'生物防治',method:'释放小花蝽或捕食螨'},{level:3,name:'天然药剂',method:'肥皂水+印楝油混合喷洒，重点喷花心和花蕾'}]},
+'flower-spot':{name:'灰霉病（花果期）',desc:'花朵和幼果出现灰褐色水渍状软腐，表面密生灰色霉层，传播极快。',level:'high',safetyLevel:'red',safetyLabel:'需谨慎',safetyDesc:'花果期灰霉病传播快，需及时摘除病部。',safetyTips:['立即摘除所有病花病果，装袋密封丢弃','不要将病部丢入堆肥，会传播病菌','降低湿度至50%以下，增加通风','避免傍晚浇水，减少夜间湿度','严重时使用小风扇加强通风'],treatment:[{level:1,name:'物理防治',method:'立即摘除病花病果，增加通风，降低湿度至50%以下'},{level:2,name:'生物防治',method:'枯草芽孢杆菌喷洒，每5天1次'},{level:3,name:'天然药剂',method:'1%小苏打水喷洒，肉桂粉撒布土表'}]},
+'flower-hole':{name:'蜗牛/蛞蝓危害',desc:'花瓣和叶片出现不规则孔洞，表面有黏液痕迹，清晨或雨后可见虫体。',level:'low',safetyLevel:'green',safetyLabel:'绿色安全',safetyDesc:'物理防治即可，无需用药。',safetyTips:['傍晚人工捕捉最有效','盆底撒碎蛋壳或咖啡渣可物理阻隔','铜带缠绕盆口可驱避','勿使用化学杀蜗牛剂（对宠物有害）','清除盆底杂物和杂草减少栖息地'],treatment:[{level:1,name:'物理防治',method:'傍晚人工捕捉，盆底撒碎蛋壳/咖啡渣/硅藻土阻隔'},{level:2,name:'生物防治',method:'引入步行虫或青蛙（开放阳台）'},{level:3,name:'天然药剂',method:'啤酒陷阱（浅盘埋入土中，边缘与土齐平，内装啤酒诱杀）'}]}
+};
+
+var calendarDB={
+'south':{name:'华南地区（广州/深圳/南宁）',months:[
+{m:'1月',sow:'蒜苗、豌豆、蚕豆苗',harvest:'生菜、小白菜、菠菜',note:'冬季温和，可全年种植'},
+{m:'2月',sow:'番茄、辣椒、茄子',harvest:'蒜苗、豌豆苗',note:'春播开始，立春后可播种'},
+{m:'3月',sow:'黄瓜、丝瓜、豆角',harvest:'番茄、辣椒',note:'梅雨前抢种'},
+{m:'4月',sow:'空心菜、红薯叶、南瓜',harvest:'黄瓜、丝瓜',note:'气温适宜，生长旺盛'},
+{m:'5月',sow:'秋葵、苦瓜',harvest:'空心菜、豆角',note:'高温期选耐热品种'},
+{m:'6月',sow:'夏白菜、耐热生菜',harvest:'秋葵、南瓜',note:'台风季注意防护'},
+{m:'7月',sow:'秋番茄、秋辣椒',harvest:'夏白菜',note:'遮阳网降温'},
+{m:'8月',sow:'秋黄瓜、秋豆角',harvest:'秋番茄苗',note:'秋播开始'},
+{m:'9月',sow:'菠菜、香菜、生菜',harvest:'秋黄瓜',note:'最佳种植季'},
+{m:'10月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'秋高气爽'},
+{m:'11月',sow:'生菜、苋菜、豌豆',harvest:'小白菜',note:'冬季蔬菜主季'},
+{m:'12月',sow:'土豆、萝卜',harvest:'生菜、苋菜',note:'注意防寒'}
+]},
+'east':{name:'华东地区（上海/杭州/南京）',months:[
+{m:'1月',sow:'蒜苗、豌豆、蚕豆苗',harvest:'菠菜、香菜、生菜',note:'冬季温和，可种植耐寒蔬菜'},
+{m:'2月',sow:'土豆、早春白菜',harvest:'蒜苗、豌豆苗',note:'立春后可提前播种'},
+{m:'3月',sow:'番茄、辣椒、茄子',harvest:'土豆苗',note:'春播开始，注意倒春寒'},
+{m:'4月',sow:'黄瓜、丝瓜、豆角',harvest:'早春白菜',note:'气温回升，万物生长'},
+{m:'5月',sow:'空心菜、红薯叶',harvest:'生菜、小白菜',note:'梅雨季前抢种'},
+{m:'6月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、丝瓜',note:'梅雨季节，注意排水防涝'},
+{m:'7月',sow:'秋番茄、秋辣椒',harvest:'豆角、空心菜',note:'高温遮阳，防晒防虫'},
+{m:'8月',sow:'秋黄瓜、秋豆角',harvest:'夏白菜',note:'台风季节，做好防护'},
+{m:'9月',sow:'菠菜、香菜、生菜',harvest:'秋番茄',note:'秋播黄金期'},
+{m:'10月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'秋高气爽，最佳种植季'},
+{m:'11月',sow:'生菜、苋菜、豌豆',harvest:'小白菜',note:'冬季蔬菜主季'},
+{m:'12月',sow:'土豆、萝卜、蒜苗',harvest:'生菜、苋菜',note:'大棚或室内种植'}
+]},
+'north':{name:'华北地区（北京/天津/石家庄）',months:[
+{m:'1月',sow:'蒜苗、豆芽、室内芽苗菜',harvest:'菠菜、香菜（温室）',note:'严寒期，仅限室内种植'},
+{m:'2月',sow:'室内育苗（番茄/辣椒）',harvest:'蒜苗、豆芽',note:'提前育苗，3月移栽'},
+{m:'3月',sow:'早春白菜、菠菜、豌豆',harvest:'',note:'土壤解冻后播种耐寒蔬菜'},
+{m:'4月',sow:'番茄、辣椒、茄子',harvest:'早春白菜',note:'终霜后播种喜温蔬菜'},
+{m:'5月',sow:'黄瓜、丝瓜、豆角',harvest:'菠菜、豌豆',note:'气温稳定，露地种植'},
+{m:'6月',sow:'空心菜、红薯叶',harvest:'番茄苗（定植）',note:'初夏种植，注意防虫'},
+{m:'7月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、丝瓜',note:'高温选耐热品种'},
+{m:'8月',sow:'秋番茄、秋辣椒、萝卜',harvest:'豆角、空心菜',note:'秋播准备'},
+{m:'9月',sow:'菠菜、香菜、生菜、油麦菜',harvest:'夏白菜',note:'最佳秋播期'},
+{m:'10月',sow:'小白菜、蒜苗、豌豆',harvest:'菠菜、香菜',note:'收获旺季'},
+{m:'11月',sow:'土豆、萝卜、室内芽苗菜',harvest:'小白菜',note:'霜冻前收获或移入室内'},
+{m:'12月',sow:'蒜苗、豆芽、小麦草',harvest:'土豆、萝卜',note:'室内种植为主'}
+]},
+'southwest':{name:'西南地区（成都/重庆）',months:[
+{m:'1月',sow:'蒜苗、豌豆、蚕豆苗',harvest:'菠菜、香菜、生菜',note:'盆地冬季温和，可种植耐寒蔬菜'},
+{m:'2月',sow:'番茄、辣椒、茄子',harvest:'蒜苗、豌豆苗',note:'春播提前，盆地回暖早'},
+{m:'3月',sow:'黄瓜、丝瓜、豆角',harvest:'菠菜、香菜',note:'气温回升快，多种快种'},
+{m:'4月',sow:'空心菜、红薯叶',harvest:'番茄、辣椒',note:'注意多雨排水'},
+{m:'5月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、豆角',note:'高温高湿，注意防虫'},
+{m:'6月',sow:'秋番茄、秋辣椒',harvest:'空心菜',note:'遮阳通风，避免暴雨'},
+{m:'7月',sow:'秋黄瓜、秋豆角',harvest:'夏白菜',note:'高温期，选择耐热品种'},
+{m:'8月',sow:'菠菜、香菜、生菜',harvest:'秋番茄苗',note:'秋播开始'},
+{m:'9月',sow:'小白菜、油麦菜',harvest:'菠菜、香菜',note:'秋季黄金期'},
+{m:'10月',sow:'生菜、苋菜、豌豆',harvest:'小白菜',note:'气温适宜'},
+{m:'11月',sow:'土豆、萝卜、蒜苗',harvest:'生菜、苋菜',note:'冬季温和'},
+{m:'12月',sow:'蒜苗、豆芽、小麦草',harvest:'土豆、萝卜',note:'可全年种植'}
+]},
+'northwest':{name:'西北地区（西安/兰州/乌鲁木齐）',months:[
+{m:'1月',sow:'蒜苗、豆芽、室内芽苗菜',harvest:'菠菜、香菜（温室）',note:'严寒期，仅限室内种植'},
+{m:'2月',sow:'室内育苗（番茄/辣椒）',harvest:'蒜苗、豆芽',note:'提前育苗，等终霜后移栽'},
+{m:'3月',sow:'早春白菜、菠菜、豌豆',harvest:'',note:'土壤解冻后播种耐寒蔬菜'},
+{m:'4月',sow:'番茄、辣椒、茄子',harvest:'早春白菜',note:'终霜后播种喜温蔬菜'},
+{m:'5月',sow:'黄瓜、丝瓜、豆角',harvest:'菠菜、豌豆',note:'气温稳定，露地种植'},
+{m:'6月',sow:'空心菜、红薯叶',harvest:'番茄苗（定植）',note:'初夏种植，注意干旱'},
+{m:'7月',sow:'夏白菜、耐热生菜',harvest:'黄瓜、豆角',note:'高温干燥注意浇水遮阳'},
+{m:'8月',sow:'秋番茄、秋辣椒、萝卜',harvest:'空心菜',note:'秋播准备'},
+{m:'9月',sow:'菠菜、香菜、生菜、油麦菜',harvest:'夏白菜',note:'最佳秋播期'},
+{m:'10月',sow:'小白菜、蒜苗、豌豆',harvest:'菠菜、香菜',note:'收获旺季'},
+{m:'11月',sow:'土豆、萝卜、室内芽苗菜',harvest:'小白菜',note:'霜冻前收获或移入室内'},
+{m:'12月',sow:'蒜苗、豆芽、小麦草',harvest:'土豆、萝卜',note:'室内种植为主'}
+]}
+};
+
+var companionDB={
+'tomato':{good:[{plant:'罗勒',benefit:'驱虫(蚊蝇/蚜虫)+ 提升风味',mechanism:'驱虫+风味提升',method:'间隔20cm种植'},{plant:'胡萝卜',benefit:'地下互不干扰，深浅根互补',mechanism:'空间互补',method:'番茄行间套种'},{plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔30cm环绕种植'}],bad:[{plant:'土豆',benefit:'同属茄科，易传染疫病',reason:'同科易感病',method:'避免相邻种植，间隔2米以上'},{plant:'玉米',benefit:'遮阴+争夺养分和水分',reason:'争养分',method:'避免同盆种植'},{plant:'薄荷',benefit:'分泌抑制物质，阻碍番茄生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'}]},
+'cucumber':{good:[{plant:'豆类',benefit:'固氮供肥+提供遮阴',mechanism:'固氮互助',method:'黄瓜搭架下方种豆类'},{plant:'向日葵',benefit:'天然支架+吸引授粉昆虫',mechanism:'空间互补+驱虫',method:'向日葵为黄瓜提供攀爬支架'},{plant:'莴苣',benefit:'吸引寄生蜂，防治黄瓜甲虫',mechanism:'驱虫',method:'黄瓜行间点缀种植'}],bad:[{plant:'土豆',benefit:'争夺大量养分和水分',reason:'争养分',method:'避免同盆种植'},{plant:'芳香草药',benefit:'抑制黄瓜生长',reason:'分泌抑制物质',method:'分开种植'}]},
+'pepper':{good:[{plant:'罗勒',benefit:'驱虫(蚜虫/蚊蝇)+ 提升风味',mechanism:'驱虫+风味提升',method:'间隔15cm种植'},{plant:'胡萝卜',benefit:'地下互不干扰，深浅根互补',mechanism:'空间互补',method:'辣椒行间套种'},{plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔25cm环绕种植'}],bad:[{plant:'薄荷',benefit:'分泌抑制物质，阻碍辣椒生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'},{plant:'大豆',benefit:'争夺养分和生长空间',reason:'争养分',method:'避免同盆种植'}]},
+'eggplant':{good:[{plant:'豆类',benefit:'固氮供肥，改善土壤',mechanism:'固氮互助',method:'茄子行间种矮生豆类'},{plant:'万寿菊',benefit:'根系分泌物质驱线虫',mechanism:'驱虫',method:'间隔25cm环绕种植'},{plant:'青椒',benefit:'同类植物，生长需求相似，互助互利',mechanism:'同类互助',method:'可相邻种植，间隔30cm'}],bad:[{plant:'薄荷',benefit:'分泌抑制物质，阻碍茄子生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'},{plant:'烟草',benefit:'同属茄科，易传染花叶病毒等病害',reason:'同科易感病',method:'严禁相邻种植'}]},
+'strawberry':{good:[{plant:'矮生豆类',benefit:'固氮供肥，改善土壤肥力',mechanism:'固氮互助',method:'草莓行间种矮生豆'},{plant:'生菜',benefit:'地面覆盖保湿，抑制杂草',mechanism:'空间互补',method:'草莓株间种生菜'},{plant:'葱科',benefit:'气味驱虫，减少蚜虫和蜗牛',mechanism:'驱虫',method:'草莓边缘种植一圈'}],bad:[{plant:'甘蓝',benefit:'争夺大量养分，影响草莓产量',reason:'争养分',method:'避免同盆种植'},{plant:'土豆',benefit:'同属易感枯萎病',reason:'同科易感病',method:'严禁相邻种植'}]},
+'lettuce':{good:[{plant:'草莓',benefit:'草莓地面覆盖保湿，生菜遮阴',mechanism:'空间互补',method:'交替行种植'},{plant:'胡萝卜',benefit:'深浅根互补，互不干扰',mechanism:'空间互补',method:'生菜行间套种'},{plant:'葱科',benefit:'气味驱蚜虫',mechanism:'驱虫',method:'每3行生菜1行葱'}],bad:[{plant:'芹菜',benefit:'分泌抑制物质，影响生菜生长',reason:'分泌抑制物质',method:'分开种植'}]},
+'beans':{good:[{plant:'玉米',benefit:'玉米为豆类提供支架，豆类固氮回馈玉米',mechanism:'固氮互助+空间互补',method:'经典三姐妹搭配'},{plant:'南瓜',benefit:'南瓜地面覆盖保湿，豆类固氮供肥',mechanism:'固氮互助+空间互补',method:'三姐妹种植法'},{plant:'胡萝卜',benefit:'深浅根互补，互不干扰',mechanism:'空间互补',method:'豆类行间套种'}],bad:[{plant:'葱科',benefit:'葱科分泌物抑制豆类根瘤菌固氮',reason:'抑制固氮菌',method:'严禁相邻种植'},{plant:'薄荷',benefit:'分泌抑制物质，阻碍豆类生长',reason:'分泌抑制物质',method:'分开种植，间隔1米以上'}]}
+};
+
+var devicesDB=[
+{name:'土壤湿度传感器',icon:'📐',price:'45-120元',desc:'实时监测土壤含水量，手机APP查看数据。智能提醒浇水时间，避免浇水过多或过少。',tag:'基础推荐',color:'var(--sage)',brands:[{name:'小米/米家',model:'蓝牙温湿度计2'},{name:'涂鸦智能',model:'Zigbee土壤传感器'},{name:'海睿',model:'HR-SM01智能监测仪'},{name:'花花草草',model:'花草监测仪'},{name:'绿米Aqara',model:'动静贴+传感器'}],shops:['京东自营','天猫旗舰店','小米有品']},
+{name:'自动浇花器',icon:'🚰',price:'80-200元',desc:'连接水龙头，定时定量灌溉。出差旅行也不怕植物缺水，支持多路分控。',tag:'出差必备',color:'var(--terra)',brands:[{name:'嘉丁拿GARDENA',model:'Micro-Drip滴灌套装'},{name:'绿航',model:'智能定时浇花器'},{name:'耐德斯特',model:'自动滴灌系统'},{name:'沁雨',model:'阳台智能灌溉套装'},{name:'植客',model:'WiFi远程浇花器'}],shops:['京东自营','天猫旗舰店','亚马逊海外购']},
+{name:'LED植物补光灯',icon:'💡',price:'50-150元',desc:'全光谱植物灯，模拟自然日光。北向阳台/室内也能种出健壮植物。',tag:'逆光必备',color:'var(--gold)',brands:[{name:'飞利浦Philips',model:'LED植物生长灯Par38'},{name:'三思',model:'全光谱植物补光灯'},{name:'雷士',model:'多肉植物灯管'},{name:'欧普',model:'LED植物生长灯'},{name:'贵翔',model:'全光谱COB植物灯'}],shops:['京东自营','天猫旗舰店','品牌官网']},
+{name:'温湿度监测仪',icon:'🌡️',price:'30-80元',desc:'精准测量环境温湿度。帮助判断是否适合播种或需要防寒保暖。',tag:'基础推荐',color:'var(--sage)',brands:[{name:'小米/米家',model:'蓝牙温湿度计2'},{name:'青萍',model:'CGG1温湿度计'},{name:'得力',model:'数显温湿度计'},{name:'美德时',model:'JR900电子温湿度计'},{name:'华盛昌',model:'DT-322温湿度表'}],shops:['京东自营','天猫旗舰店','小米有品']},
+{name:'智能种菜机',icon:'🔧',price:'300-800元',desc:'水培一体化设备，自动光照+营养液循环。自动控制光照和水位，30天可收。',tag:'高级装备',color:'var(--forest)',brands:[{name:'AeroGarden',model:'Harvest Elite'},{name:'科瑞',model:'智能水培种植机'},{name:'小绿舟',model:'家庭智能种菜机'},{name:'植小宅',model:'全自动水培机'},{name:'绿舍',model:'室内智能种植箱'}],shops:['京东自营','天猫旗舰店','亚马逊海外购']},
+{name:'电动喷雾器',icon:'🔧',price:'40-100元',desc:'电动压力喷雾，均匀喷洒叶面肥和天然药剂。大容量电池，省时省力。',tag:'病虫害防治',color:'var(--terra)',brands:[{name:'市下SEESA',model:'SX-MD2电动喷壶'},{name:'超农力',model:'锂电池喷雾器'},{name:'农宝',model:'手持电动喷雾机'},{name:'普朗德',model:'高压电动喷壶'},{name:'绿航',model:'园艺电动喷雾器'}],shops:['京东自营','天猫旗舰店','拼多多品牌店']}
+];
+
+var regrowDB={
+'scallion':{name:'小葱',icon:'\uD83E\uDDC5',cutMethod:'保留根部3cm，将白色根部朝下放入水中',waterLevel:'水\u6D78\u6839\u90E8\u5373\u53EF\uFF0C\u4E0D\u8981\u6DE1\u8FC7\u830E\u53F6',changeFreq:'每\u5929\u6362\u6C34\uFF0C\u6CE8\u610F\u6C34\u8D28\u6E05\u6D01',sproutDays:'3-5\u5929',harvestDays:'15-20\u5929',tips:'切\u5272\u65F6\u4FDD\u7559\u9876\u7AEF\u6839\u90E8\uFF0C\u53EF\u79CD\u571F\u6216\u6C34\u57F9\u3002\u540C\u65F6\u57F9\u517B\u591A\u6839\u6548\u679C\u66F4\u597D\u3002',stats:'每\u682A\u53EF\u8282\u77012-3\u5143\uFF0C\u4E00\u5E74\u7EA6\u8282\u7701100-150\u5143\uFF0C\u51CF\u5C11\u5851\u6599\u888B\u5E9F\u5F03\u7EA630\u4E2A'},
+'lettuce':{name:'生菜',icon:'\uD83E\uDD6C',cutMethod:'保\u7559\u5E95\u90E8\u82AF\uFF0C\u5C06\u82AF\u653E\u5165\u6D45\u7897\u6C34\u4E2D',waterLevel:'水\u4E0D\u8981\u8D85\u8FC7\u82AF\u90E8\u4E00\u534A',changeFreq:'每2\u5929\u6362\u6C34',sproutDays:'5-7\u5929',harvestDays:'20-25\u5929',tips:'\u9009\u62E9\u5E26\u6839\u7684\u751F\u83DC\u82AF\uFF0C\u53D1\u82BD\u540E\u8F6C\u79CD\u5230\u571F\u58E4\u6548\u679C\u66F4\u4F73\u3002',stats:'每\u682A\u53EF\u8282\u77015-8\u5143\uFF0C\u4E00\u5E74\u7EA6\u8282\u7701200-300\u5143\uFF0C\u51CF\u5C11\u5851\u6599\u888B\u5E9F\u5F03\u7EA660\u4E2A'},
+'coriander':{name:'香菜',icon:'\uD83C\uDF3F',cutMethod:'保\u7559\u6839\u90E8\u548C\u57FA\u90E8\u830E\u8282\uFF0C\u5C06\u6839\u653E\u5165\u6C34\u4E2D',waterLevel:'浸\u6CA1\u6839\u90E8\uFF0C\u6C34\u4E0D\u8D85\u8FC7\u57FA\u90E8\u830E\u8282',changeFreq:'每\u5929\u6362\u6C34',sproutDays:'7-10\u5929',harvestDays:'25-30\u5929',tips:'香\u83DC\u4E0D\u6613\u518D\u751F\uFF0C\u5EFA\u8BAE\u7528\u79CD\u5B50\u79CD\u690D\u3002\u5982\u679C\u518D\u751F\uFF0C\u8F6C\u571F\u58E4\u6548\u679C\u66F4\u597D\u3002',stats:'每\u628A\u53EF\u8282\u77013-5\u5143\uFF0C\u4E00\u5E74\u7EA6\u8282\u7701150-200\u5143'},
+'celery':{name:'芹菜',icon:'\uD83C\uDF3F',cutMethod:'切\u9664\u9876\u90E8\u53F6\u7247\uFF0C\u4FDD\u7559\u5E95\u90E8\u57FA\u90E8\u82AF',waterLevel:'将\u57FA\u90E8\u653E\u5165\u6D45\u7897\uFF0C\u6C34\u6D78\u5230\u57FA\u90E8\u4E00\u534A',changeFreq:'每2\u5929\u6362\u6C34',sproutDays:'7-10\u5929',harvestDays:'30-40\u5929',tips:'发\u82BD\u540E\u8F6C\u79CD\u571F\u58E4\uFF0C\u65B0\u830E\u4E0D\u5E94\u592A\u591A\uFF0C\u4FDD\u7559\u65B0\u6839\u830E\u5373\u53EF\u3002',stats:'每\u682A\u53EF\u8282\u77018-12\u5143\uFF0C\u4E00\u5E74\u7EA6\u8282\u7701300-400\u5143'},
+'basil':{name:'罗勒',icon:'\uD83C\uDF3F',cutMethod:'保留茎节间的芽点，将枝条放入水中',waterLevel:'水浸枝条底部3-5cm',changeFreq:'每天换水',sproutDays:'5-7天',harvestDays:'15-20天',tips:'罗勒极易发根，发根后尽快转土壤。可持续采摘叶片，侧茎发芽继续生长。',stats:'每盆可节省15-20元，一年约节省500-700元'}
+};
+
+var firstaidDB=[
+{id:'yellow-leaf',icon:'\uD83D\uDFE3',title:'叶子发黄',severity:'low',severityLabel:'\u8F7B\u5FAE',severityColor:'#059669',
+analysis:'叶子发黄是最常见的种植问题。可能原因包括：浇水过多导致根系缺氧(最常见)、缺氮导致老叶均匀发黄、光照不足导致新叶发黄、正常老化导致底部老叶发黄。',
+actions:[
+{step:'\u68C0\u67E5\u571F\u58E4\u6E7F\u5EA6',detail:'\u7528\u624B\u6307\u63D2\u5165\u571F\u58E4\uFF0C2-3cm\u6DF1\u5904\u5E94\u7565\u5E72\u3002\u5982\u679C\u5F88\u6E7F\u6216\u6709\u79EF\u6C34\uFF0C\u662F\u6D47\u6C34\u8FC7\u591A\u3002'},
+{step:'\u8C03\u6574\u6D47\u6C34',detail:'\u6D47\u6C34\u8FC7\u591A\uFF1A\u505C\u6B62\u6D47\u6C347\u5929\uFF0C\u589E\u52A0\u901A\u98CE\u3002\u6D47\u6C34\u4E0D\u8DB3\uFF1A\u8865\u5145\u6D47\u6C34\uFF0C\u89C1\u5E72\u89C1\u6E7F\u3002'},
+{step:'\u68C0\u67E5\u5149\u7167',detail:'\u5982\u679C\u65B0\u53F6\u53D1\u9EC4\uFF0C\u53EF\u80FD\u662F\u5149\u7167\u4E0D\u8DB3\uFF0C\u8C03\u6574\u4F4D\u7F6E\u6216\u589E\u52A0LED\u8865\u5149\u3002'},
+{step:'\u666E\u904D\u53D1\u9EC4',detail:'\u5982\u679C\u6574\u682A\u5747\u5300\u53D1\u9EC4\uFF0C\u53EF\u80FD\u7F3A\u6C2E\uFF0C\u65BD\u7528\u8150\u719F\u6709\u673A\u80A5\u3002'}
+]},
+{id:'wilting',icon:'\uD83C\uDF3F',title:'植物萎蔫',severity:'mid',severityLabel:'\u4E2D\u7B49',severityColor:'#d4a853',
+analysis:'植物萎蔫表现为叶片下垂、失去光泽。可能原因：缺水(最常见)、根部腐烂无法吸水、高温导致蒸腾过快、施肥浓度过高烧根。',
+actions:[
+{step:'\u7D27\u6025\u8865\u6C34',detail:'\u5982\u679C\u571F\u58E4\u5B8C\u5168\u5E72\u71E5\uFF0C\u7ACB\u5373\u6D47\u900F\u6C34\uFF0C\u7B49\u5F8530\u5206\u949F\u89C2\u5BDF\u6062\u590D\u60C5\u51B5\u3002'},
+{step:'\u68C0\u67E5\u6839\u90E8',detail:'\u5982\u679C\u571F\u58E4\u5F88\u6E7F\u4F46\u4ECD\u7136\u8427\u8475\uFF0C\u62D4\u51FA\u68C0\u67E5\u6839\u90E8\u662F\u5426\u53D1\u9ED1\u8150\u70C2\u3002'},
+{step:'\u906E\u9634\u964D\u6E29',detail:'\u9AD8\u6E29\u5929\u6C14\u8427\u8475\uFF0C\u79FB\u81F3\u9634\u51C9\u5904\uFF0C\u907F\u514D\u5F3A\u5149\u76F4\u5C04\u3002'},
+{step:'\u6E05\u6C34\u51B2\u6D17',detail:'\u5982\u679C\u6000\u7591\u65BD\u80A5\u8FC7\u6D53\uFF0C\u7528\u5927\u91CF\u6E05\u6C34\u51B2\u6D17\u571F\u58E4\uFF0C\u7B49\u5F85\u81EA\u7136\u6062\u590D\u3002'}
+]},
+{id:'bugs',icon:'\uD83D\uDC1B',title:'发现虫子',severity:'mid',severityLabel:'\u4E2D\u7B49',severityColor:'#d4a853',
+analysis:'发现虫子不要慌，先判断是益虫还是害虫。常见害虫：蚜虫(绿色小点)、红蜘蛛(红色微小虫)、菜青虫(绿色毛虫)、蜗牛(黏液痕迹)。常见益虫：瓢虫(吃蚜虫)、蚯蚓(松土)。',
+actions:[
+{step:'\u8BC6\u522B\u866B\u7C7B',detail:'\u62CD\u7167\u8BB0\u5F55\uFF0C\u5BF9\u6BD4\u53C2\u8003\u56FE\u3002\u74E2\u866B\u662F\u76CA\u866B\uFF0C\u4E0D\u8981\u6740\u3002'},
+{step:'\u7269\u7406\u9A71\u866B',detail:'\u5C11\u91CF\u866B\u5B50\uFF1A\u7528\u80A5\u7682\u6C34\u55B7\u6D12\u6216\u5F3A\u529B\u6C34\u6D41\u51B2\u6D17\u3002\u591A\u6570\u866B\u5B50\uFF1A\u9EC4\u8272\u7C98\u866B\u677F\u3002'},
+{step:'\u751F\u7269\u9632\u6CBB',detail:'\u91CA\u653E\u74E2\u866B\uFF08\u5403\u8693\u866B\uFF09\uFF0C\u6216\u55B7\u6D12\u82E6\u53C2\u78B1\u3001\u82CF\u4E91\u91D1\u6746\u83CC\u3002'},
+{step:'\u5929\u7136\u836F\u5242',detail:'\u5982\u679C\u4E0A\u8FF0\u65B9\u6CD5\u65E0\u6548\uFF0C\u4F7F\u7528\u5370\u6982\u6CB9\u6216\u80A5\u7682\u6C34\uFF0C\u6CE8\u610F\u5B89\u5168\u95F4\u9694\u671F\u3002'}
+]},
+{id:'root-rot',icon:'\u2620\uFE0F',title:'根部发黑腐烂',severity:'high',severityLabel:'\u4E25\u91CD',severityColor:'#dc2626',
+analysis:'根部发黑腐烂是根腐病表现，通常由浇水过多、土壤排水不良或真菌感染引起。严重时需立即换土重植。如植株整体萎蔫且浇不活，可能已无法挽救。',
+actions:[
+{step:'立即停水',detail:'停止浇水，将植物放在通风良好的地方。'},
+{step:'脱盆检查',detail:'小心拔出植物，检查根系。黑色软腐的根用剪刀剪除。'},
+{step:'\u6D88\u6BD2\u5904\u7406',detail:'\u526A\u6839\u540E\u7528\u9AD8\u9494\u9178\u94BE1000\u500D\u6DB2\u6D78\u6839\uFF0C\u6216\u6D82\u62B9\u6728\u70AD\u7C89\u9632\u611F\u67D3\u3002'},
+{step:'换土重植',detail:'用全新土壤重植，确保容器底部有良好排水孔。换下的旧土不要再用。'}
+]}
+];
+
+// Generate recommendation
+function generateRecommend(){var dir=document.getElementById('rec-direction').value;var city=document.getElementById('rec-city').value;var exp=document.getElementById('rec-exp').value;var purpose=document.getElementById('rec-purpose').value;var space=document.getElementById('rec-space').value;var resultDiv=document.getElementById('recommend-result');var cardsDiv=document.getElementById('recommend-cards');if(!dir){alert('\u8BF7\u9009\u62E9\u9633\u53F0\u671D\u5411');return}var climate=cityClimate[city]||'east';var scored=plantMasterDB.map(function(p){var score=0;if(p.light.indexOf(dir)!==-1)score+=30;else score-=15;if(p.climate.indexOf(climate)!==-1)score+=20;else score-=5;if(p.exp.indexOf(exp)!==-1)score+=15;else if(exp==='newbie'&&p.exp.indexOf('newbie')===-1)score-=10;if(p.purpose.indexOf(purpose)!==-1)score+=20;if(p.space.indexOf(space)!==-1)score+=10;else score-=8;if(exp==='newbie'&&p.difficulty==='\u2B50')score+=10;return{plant:p,score:score}});scored.sort(function(a,b){return b.score-a.score});var plants=scored.slice(0,8).map(function(s){return s.plant});var dirMap={south:'\u671D\u5357\uFF08\u5145\u8DB3\u76F4\u5C04\u5149>6h\uFF09',north:'\u671D\u5317\uFF08\u6563\u5C04\u5149<3h\uFF09',east:'\u671D\u4E1C\uFF08\u4E0A\u5348\u51493-6h\uFF09',west:'\u671D\u897F\uFF08\u4E0B\u5348\u51493-6h\uFF09'};var spaceMap={open:'\u5F00\u653E\u9633\u53F0\uFF08\u901A\u98CE\u826F\u597D\uFF09',closed:'\u5C01\u95ED\u9633\u53F0\uFF08\u901A\u98CE\u8F83\u5DEE\uFF09',windowsill:'\u7A97\u53F0\uFF08\u7A7A\u95F4\u6709\u9650\uFF09',indoor:'\u5BA4\u5185\u9760\u7A97\uFF08\u9700\u8865\u5149\uFF09'};var purposeMap={eat:'\u98DF\u7528\u79CD\u690D',ornament:'\u89C2\u8D4F\u7EFF\u690D',quick:'\u5FEB\u901F\u6536\u6210',education:'\u4EB2\u5B50\u6559\u80B2'};var expMap={newbie:'\u65B0\u624B',intermediate:'\u8FDB\u9636',expert:'\u8D44\u6DF1'};var cityMap={guangzhou:'\u5E7F\u5DDE',shenzhen:'\u6DF1\u5733',beijing:'\u5317\u4EAC',shanghai:'\u4E0A\u6D77',hangzhou:'\u676D\u5DDE',chengdu:'\u6210\u90FD',chongqing:'\u91CD\u5E86',wuhan:'\u6B66\u6C49',xian:'\u897F\u5B89',nanjing:'\u5357\u4EAC'};cardsDiv.innerHTML='';plants.forEach(function(plant,idx){setTimeout(function(){var div=document.createElement('div');div.className='result-card';div.innerHTML='<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><div style="font-size:2rem;">'+plant.emoji+'</div><div><div style="font-weight:700;color:var(--forest);font-size:1rem;">'+plant.name+'</div><div style="font-size:0.75rem;color:var(--text-light);">\u96BE\u5EA6: '+plant.difficulty+' \u00B7 \u5468\u671F: '+plant.cycle+'</div></div></div><div style="font-size:0.85rem;color:var(--text-mid);margin-bottom:8px;">'+plant.tip+'</div>'+(plant.toxic?'<div style="font-size:0.75rem;color:#dc2626;background:rgba(239,68,68,0.08);padding:4px 10px;border-radius:100px;display:inline-block;">\u26A0\uFE0F '+plant.note+'</div>':'<div style="font-size:0.75rem;color:#059669;background:rgba(16,185,129,0.08);padding:4px 10px;border-radius:100px;display:inline-block;">\u2713 \u5B89\u5168\u65E0\u6BD2</div>');cardsDiv.appendChild(div)},idx*100)});var summaryDiv=document.getElementById('recommend-summary');summaryDiv.innerHTML='<strong>\u1F4CB \u73AF\u5883\u8BC4\u4F30</strong>\uFF1A'+cityMap[city]+' \u00B7 '+dirMap[dir]+' \u00B7 '+spaceMap[space]+' \u00B7 '+expMap[exp]+' \u00B7 \u76EE\u6807\uFF1A'+purposeMap[purpose]+'<br><span style="color:var(--sage);font-size:0.82rem;margin-top:6px;display:inline-block;">\u5DF2\u4ECE '+plantMasterDB.length+' \u79CD\u690D\u7269\u4E2D\u4E3A\u60A8\u667A\u80FD\u5339\u914D '+plants.length+' \u79CD\u6700\u4F73\u9009\u62E9</span>';resultDiv.style.display='block';document.getElementById('recommend-tips').style.display='block';if(silverModeActive)setTimeout(function(){applyPlainLangToElement(cardsDiv);addSpeakToResult(cardsDiv)},plants.length*100+50)}
+function setRecExample(dir, city, exp, purpose, space){
+  document.getElementById('rec-direction').value=dir;
+  document.getElementById('rec-city').value=city;
+  document.getElementById('rec-exp').value=exp;
+  document.getElementById('rec-purpose').value=purpose;
+  document.getElementById('rec-space').value=space;
+  generateRecommend();
+}
+
+// Pest diagnosis
+function diagnosePest(){var part=document.getElementById('pest-part').value;var symptom=document.getElementById('pest-symptom').value;var resultDiv=document.getElementById('pest-result');if(!part||!symptom){alert('\u8BF7\u9009\u62E9\u53D7\u5BB3\u90E8\u4F4D\u548C\u75C7\u72B6\u7C7B\u578B');return}var key=part+'-'+symptom;var pest=pestDB[key];resultDiv.style.display='block';if(!pest){resultDiv.innerHTML='<div class="result-card" style="max-width:600px;margin:0 auto;"><h3 style="color:var(--forest);margin-bottom:12px;">\u1F50D \u672A\u627E\u5230\u7CBE\u786E\u5339\u914D</h3><p style="color:var(--text-mid);">\u5F53\u524D\u7EC4\u5408('+part+'-'+symptom+')\u672A\u5728\u6570\u636E\u5E93\u4E2D\u627E\u5230\u5339\u914D\u3002\u8BF7\u5C1D\u8BD5\u66F4\u6362\u75C7\u72B6\u9009\u62E9\uFF0C\u6216\u54A8\u8BE2\u4E13\u4E1A\u79CD\u690D\u987E\u95EE\u3002</p></div>';return}var levelColors={low:'green',mid:'yellow',high:'red'};var levelColors2={low:'var(--sage)',mid:'var(--gold)',high:'var(--terra)'};var html='<div class="result-card" style="max-width:700px;margin:0 auto;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:2rem;">\uD83D\uDD0D</span><div><h3 style="color:var(--forest);font-size:1.15rem;">\u8BCA\u65AD\u7ED3\u679C\uFF1A'+pest.name+'</h3><span class="tag-'+levelColors[pest.level]+'">'+pest.safetyLabel+'</span></div></div><p style="color:var(--text-mid);margin-bottom:20px;">'+pest.desc+'</p>';html+='<div style="background:var(--cream);border-radius:12px;padding:16px;margin-bottom:20px;border-left:4px solid '+levelColors2[pest.level]+'"><strong style="color:var(--forest);">\u26D4 \u5B89\u5168\u63D0\u793A</strong><p style="font-size:0.85rem;color:var(--text-mid);margin-top:8px;">'+pest.safetyDesc+'</p><ul style="margin-top:8px;padding-left:20px;font-size:0.82rem;color:var(--text-mid);">';pest.safetyTips.forEach(function(t){html+='<li style="margin-bottom:4px;">'+t+'</li>'});html+='</ul></div>';html+='<h4 style="color:var(--forest);margin-bottom:12px;">\u1F4CB IPM\u4E09\u7EA7\u9632\u6CBB\u65B9\u6848</h4>';pest.treatment.forEach(function(t){var colors=['var(--sage)','var(--gold)','var(--terra)'];html+='<div class="treatment-step" style="border-left-color:'+colors[t.level-1]+'"><div class="treatment-step-number" style="background:'+colors[t.level-1]+'">'+t.level+'</div><div><strong style="color:var(--forest);font-size:0.9rem;">'+t.name+'</strong><p style="font-size:0.85rem;color:var(--text-mid);margin-top:4px;">'+t.method+'</p></div></div>'});html+='</div>';resultDiv.innerHTML=html;if(silverModeActive){applyPlainLangToElement(resultDiv);addSpeakToResult(resultDiv)}}
+function setPestExample(part, symptom, plant, env){
+  document.getElementById('pest-part').value=part;
+  document.getElementById('pest-symptom').value=symptom;
+  document.getElementById('pest-plant').value=plant;
+  document.getElementById('pest-env').value=env;
+  diagnosePest();
+}
+
+// Calendar - default show basic info, expand for more details
+var calDetail={
+ south:{
+  temps:['12-20\u2103','15-22\u2103','18-26\u2103','22-30\u2103','25-33\u2103','28-35\u2103','28-36\u2103','27-35\u2103','25-32\u2103','22-29\u2103','17-25\u2103','13-21\u2103'],
+  water:['\u6BCF5-7\u5929\u6D47\u6C34','\u6BCF4-6\u5929','\u6BCF3-5\u5929','\u6BCF2-3\u5929\uFF0C\u65E9\u665A\u6D47','\u6BCF1-2\u5929\uFF0C\u6CE8\u610F\u6392\u6C34','\u6BCF\u5929\u6D47\u6C34','\u6BCF\u5929\u6D47\u6C34','\u6BCF\u5929\u6D47\u6C34','\u6BCF2-3\u5929','\u6BCF3-4\u5929','\u6BCF4-6\u5929','\u6BCF5-7\u5929'],
+  fertilize:['\u65BD\u57FA\u80A5\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u8FFD\u82D7\u80A5\uFF0C\u6B21\u6570\u5C11\u4F46\u6D53\u5EA6\u8DB3','\u751F\u957F\u671F\u6BCF2\u5468\u65BD\u6DB2\u80A5','\u5F00\u82B1\u524D\u589E\u65BD\u78F7\u80A5','\u679C\u671F\u589E\u65BD\u94BE\u80A5','\u53F6\u83DC\u65BD\u6DE1\u80A5\uFF0C\u907F\u514D\u70E7\u6839','\u9AD8\u6E29\u505C\u6B62\u65BD\u80A5','\u79CB\u64AD\u524D\u65BD\u57FA\u80A5','\u751F\u957F\u65FA\u76DB\u671F\uFF0C\u6BCF\u5468\u65BD\u80A5','\u589E\u65BD\u78F7\u94BE\u80A5\u4FC3\u8FDB\u6210\u719F','\u6BD2\u751F\u957F\u671F\u65BD\u6DE1\u80A5','\u4F11\u7720\u671F\uFF0C\u51CF\u5C11\u6216\u505C\u6B62\u65BD\u80A5'],
+  pest:['\u67E5\u68C0\u82D7\u6728\u662F\u5426\u6709\u866B\u5375','\u6CE2\u79CD\u524D\u6D88\u6BD2\u79CD\u5B50\uFF0C\u9632\u9ED1\u8150\u75C5','\u9AD8\u6E7F\u6CE8\u610F\u767D\u7C89\u75C5\uFF0C\u4FDD\u6301\u901A\u98CE','\u521D\u590F\u5F00\u59CB\u9632\u866B\uFF0C\u9EC4\u677F\u8BF1\u866B','\u9AD8\u6E29\u9AD8\u6E7F\u9632\u75C5\u866B\uFF0C\u53CA\u65F6\u4FEE\u526A','\u53F0\u98CE\u5B63\u68C0\u67E5\u690D\u7269\u4F24\u5BB3\uFF0C\u8865\u6551\u5012\u4F0F','\u9632\u65E5\u707E\u75C5\u548C\u9AD8\u6E29\u75C5\u5BB3','\u79CB\u74E2\u866B\u9AD8\u53D1\u671F\uFF0C\u5B89\u88C5\u9632\u866B\u7F51','\u667A\u80FD\u6811\u53EA\u9AD8\u53D1\uFF0C\u7528\u751F\u7269\u519C\u836F','\u5C11\u96E8\u5E72\u71E5\u9632\u7EA2\u8718\u86DB\uFF0C\u589E\u52A0\u6E7F\u5EA6','\u91D1\u5C5E\u866B\u9AD8\u53D1\uFF0C\u67E5\u68C0\u53F6\u80CC','\u5BD2\u6F6E\u9632\u51BB\u5BB3\uFF0C\u53EF\u8986\u76D6\u4FDD\u6E29'],
+  tips:['\u5229\u7528\u51AC\u5B63\u4F11\u8015\u671F\u6574\u7406\u571F\u58E4','\u7ACB\u6625\u524D\u540E\u6CE8\u610F\u5012\u6625\u5BD2\u6D41','\u6885\u96E8\u5B63\u524D\u642D\u5EFA\u906E\u96E8\u8BBE\u65BD','\u6CE8\u610F\u66F4\u6362\u5B63\u8282\u6027\u690D\u7269','\u9009\u62E9\u8010\u70ED\u54C1\u79CD\uFF0C\u6CE8\u610F\u63A9\u62A4','\u53F0\u98CE\u524D\u56FA\u5B9A\u82B1\u76C6\uFF0C\u9632\u98CE\u6297\u5012','\u9AD8\u6E29\u65F6\u53EF\u7528\u906E\u9633\u7F51\u964D\u6E29','\u79CB\u64AD\u524D\u5145\u5206\u6652\u571F\u6D88\u6BD2','\u79CB\u5B63\u662F\u6700\u4F73\u79CD\u690D\u5B63\u8282','\u6CE8\u610F\u9632\u5BD2\u6F6E\u6765\u4E34','\u53EF\u79CD\u690D\u8010\u5BD2\u6839\u83DC\u7C7B','\u4F11\u7720\u671F\u6574\u7406\u5DE5\u5177\uFF0C\u51C6\u5907\u6765\u5E74']
+ },
+ east:{
+  temps:['2-10\u2103','4-12\u2103','8-18\u2103','14-24\u2103','18-28\u2103','22-32\u2103','26-36\u2103','25-34\u2103','20-28\u2103','15-23\u2103','9-17\u2103','3-11\u2103'],
+  water:['\u6BCF7-10\u5929','\u6BCF5-7\u5929','\u6BCF4-5\u5929','\u6BCF3-4\u5929','\u6BCF2-3\u5929','\u6BCF2\u5929','\u6BCF1-2\u5929','\u6BCF2\u5929','\u6BCF3-4\u5929','\u6BCF4-5\u5929','\u6BCF5-7\u5929','\u6BCF7-10\u5929'],
+  fertilize:['\u5BA4\u5185\u80B2\u82D7\u65BD\u8584\u80A5','\u5E95\u80A5\u4E3A\u4E3B\uFF0C\u5C11\u91CF\u591A\u6B21','\u751F\u957F\u671F\u6BCF\u5468\u65BD\u6DB2\u80A5','\u5F00\u82B1\u524D\u589E\u65BD\u78F7\u80A5','\u679C\u5B9E\u671F\u6BCF\u5468\u589E\u65BD\u94BE\u80A5','\u9AD8\u6E29\u671F\u51CF\u91CF\u65BD\u80A5','\u590F\u5B63\u505C\u6B62\u65BD\u80A5','\u79CB\u64AD\u524D\u65BD\u8DB3\u57FA\u80A5','\u751F\u957F\u65FA\u76DB\u671F\u589E\u65BD','\u589E\u65BD\u78F7\u94BE\u80A5','\u6BD2\u751F\u957F\u671F\u65BD\u6DE1\u80A5','\u51AC\u5B63\u4F11\u7720\u671F\u51CF\u91CF\u6216\u505C'],
+  pest:['\u5BA4\u5185\u9632\u6E7F\u75C5\u5BB3','\u6CE8\u610F\u79CD\u5B50\u53D1\u9709\u75C5','\u7EC6\u83CC\u6027\u75C5\u5BB3\u9AD8\u53D1\u671F\uFF0C\u7528\u751F\u7269\u519C\u836F','\u9752\u866B\u3001\u86F2\u9A6C\u5F00\u59CB\u6D3B\u8DC3','\u868C\u866B\u3001\u866B\u5B50\u589E\u591A\uFF0C\u4F7F\u7528\u9EC4\u677F','\u659C\u7EB9\u591C\u86B6\u866B\u9AD8\u53D1\uFF0C\u591C\u95F4\u68C0\u67E5','\u6BD4\u6D1B\u83CC\u9AD8\u53D1\uFF0C\u5B9A\u671F\u5674\u836F','\u83B1\u9A6C\u8DFA\u79CB\u74E2\u866B\u9AD8\u53D1\uFF0C\u5B89\u88C5\u9632\u866B\u7F51','\u79CB\u74E2\u866B\u3001\u767D\u7C89\u75C5\u9632\u6CBB','\u5907\u6D77\u591C\u86B6\u866B\u5165\u5BA4\u4E3A\u5BB3\uFF0C\u52A0\u5F3A\u68C0\u67E5','\u51AC\u5B63\u6E05\u56ED\uFF0C\u51CF\u5C11\u8D8A\u51AC\u75C5\u866B\u6E90','\u7EC6\u83CC\u6027\u75C5\u5BB3\u4E25\u91CD\uFF0C\u53EF\u7528\u98DF\u76D0\u6C34\u6D17\u51B2'],
+  tips:['\u53EF\u5229\u7528\u5927\u68DA\u5EF6\u957F\u751F\u957F\u5B63','\u4FDD\u6E29\u80B2\u82D7\uFF0C\u907F\u514D\u5012\u6625\u5BD2','\u68A2\u516C\u6811\u5F00\u82B1\u524D\u540E\u6CE8\u610F\u9632\u971C\u51BB','\u6CE8\u610F\u56DE\u6536\u5B63\u8282\u6027\u96E8\u6C34','\u76C6\u683D\u6CE8\u610F\u906E\u9634\u9632\u66B4\u96E8','\u6881\u67B6\u4F5C\u7269\u53CA\u65F6\u642D\u67B6\u5F15\u8513','\u9AD8\u6E29\u671F\u6CE8\u610F\u63A9\u62A4\u63AA\u65BD','\u53F0\u98CE\u524D\u52A0\u56FA\u8BBE\u65BD','\u5229\u7528\u79CB\u5B63\u5145\u8DB3\u5149\u7167','\u5145\u5206\u5229\u7528\u6700\u540E\u7684\u751F\u957F\u5B63','\u53EF\u79CD\u690D\u8010\u5BD2\u7684\u6839\u83DC\u7C7B','\u51AC\u5B63\u4F11\u8015\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907']
+ },
+ north:{
+  temps:['-10-0\u2103','-5-5\u2103','0-12\u2103','8-20\u2103','15-26\u2103','20-32\u2103','22-34\u2103','20-30\u2103','15-25\u2103','8-18\u2103','0-10\u2103','-8-2\u2103'],
+  water:['\u5BA4\u5185\u6BCF7-10\u5929','\u6BCF5-7\u5929','\u6BCF4-5\u5929','\u6BCF3-4\u5929','\u6BCF2-3\u5929','\u6BCF2\u5929','\u6BCF1-2\u5929','\u6BCF2-3\u5929','\u6BCF3-4\u5929','\u6BCF4-5\u5929','\u6BCF5-7\u5929','\u5BA4\u5185\u6BCF7-10\u5929'],
+  fertilize:['\u5BA4\u5185\u82D7\u6728\u65BD\u8584\u80A5','\u5BA4\u5185\u80B2\u82D7\u65BD\u8584\u80A5\uFF0C\u907F\u514D\u70E7\u82D7','\u6237\u5916\u5F00\u59CB\u65BD\u57FA\u80A5\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u6237\u5916\u751F\u957F\u671F\u6BCF\u5468\u65BD\u6DB2\u80A5','\u5F00\u82B1\u524D\u589E\u65BD\u78F7\u80A5','\u679C\u5B9E\u671F\u589E\u65BD\u94BE\u80A5','\u9AD8\u6E29\u671F\u51CF\u91CF\u6216\u505C\u6B62\u65BD\u80A5','\u79CB\u64AD\u524D\u65BD\u8DB3\u57FA\u80A5','\u751F\u957F\u65FA\u76DB\u671F\u6BCF\u5468\u65BD\u80A5','\u589E\u65BD\u78F7\u94BE\u80A5\u4FC3\u8FDB\u6210\u719F','\u51AC\u5B63\u79FB\u5165\u5BA4\u5185\uFF0C\u51CF\u91CF\u65BD\u80A5','\u51AC\u5B63\u4F11\u7720\u671F\uFF0C\u505C\u6B62\u65BD\u80A5'],
+  pest:['\u5BA4\u5185\u9632\u6E7F\u75C5\u5BB3\uFF0C\u9002\u5F53\u901A\u98CE','\u6CE8\u610F\u79CD\u5B50\u53D1\u9709\u75C5','\u523D\u9A6C\u6D3B\u8DC3\uFF0C\u8425\u517B\u76C6\u68C0\u67E5','\u90C1\u91D1\u9999\u4E4B\u524D\u9000\u82D1\u68C0\u67E5','\u86F2\u9A6C\u9AD8\u53D1\u671F\uFF0C\u5730\u4E0B\u65BD\u836F','\u8757\u866B\u5165\u4FB5\uFF0C\u7528\u7EF4\u751F\u7D20\u5236\u5242','\u9A9A\u866B\u9AD8\u53D1\uFF0C\u7528\u4E8E\u4F4E\u6BD2\u4E73\u6CB9','\u6212\u98DF\u866B\u68C0\u67E5\u83B2\u85D5\u5B50','\u63A8\u82B1\u4E0E\u84DD\u8774\u8776\u6212\u514D\uFF0C\u84DD\u8774\u8776\u6212\u514D\u9EC4\u677F\u8BF1\u6740','\u5907\u6D77\u591C\u86B6\u866B\u5165\u5BA4\u4E3A\u5BB3','\u4F11\u7720\u671F\u6E05\u56ED\uFF0C\u51CF\u5C11\u75C5\u866B\u6E90','\u51AC\u5B63\u4F11\u7720\u671F\uFF0C\u6CE8\u610F\u5BA4\u5185\u68C0\u67E5'],
+  tips:['\u5229\u7528\u5927\u68DA\u6216\u5BA4\u5185\u79CD\u690D','\u63D0\u524D\u80B2\u82D7\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u7EC8\u971C\u524D\u4E0D\u8981\u8F6C\u79FB\u6237\u5916','\u6CE8\u610F\u9632\u98DE\u5EC3\u75C5\u5BB3','\u53EF\u642D\u5EFA\u5C0F\u578B\u906E\u9633\u68DA','\u6CE8\u610F\u5927\u96E8\u5012\u4F0F\u540E\u8865\u6551','\u9AD8\u6E29\u671F\u6CE8\u610F\u63A9\u62A4\u9632\u66B4\u6652','\u8D77\u8396\u98CE\u9632\u62A4','\u5145\u5206\u5229\u7528\u79CB\u5B63\u5149\u7167','\u53EF\u79CD\u690D\u8010\u5BD2\u6839\u83DC\u7C7B','\u5BA4\u5185\u79CD\u690D\u53EF\u4F7F\u7528\u8865\u5149\u706F','\u5BA4\u5185\u79CD\u690D\u53EF\u4F7F\u7528\u8865\u5149\u706F']
+ },
+ southwest:{
+  temps:['5-13\u2103','8-16\u2103','12-20\u2103','16-24\u2103','20-28\u2103','23-31\u2103','25-33\u2103','24-32\u2103','20-26\u2103','15-21\u2103','10-18\u2103','6-14\u2103'],
+  water:['\u6BCF5-7\u5929','\u6BCF4-6\u5929','\u6BCF3-5\u5929','\u6BCF2-3\u5929','\u6BCF2\u5929','\u6BCF1-2\u5929','\u6BCF1-2\u5929','\u6BCF2-3\u5929','\u6BCF3-4\u5929','\u6BCF4-5\u5929','\u6BCF5-7\u5929','\u6BCF6-8\u5929'],
+  fertilize:['\u65BD\u57FA\u80A5\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u8FFD\u82D7\u80A5\uFF0C\u6B21\u6570\u5C11\u4F46\u6D53\u5EA6\u8DB3','\u751F\u957F\u671F\u6BCF2\u5468\u65BD\u6DB2\u80A5','\u5F00\u82B1\u524D\u589E\u65BD\u78F7\u80A5','\u679C\u5B9E\u671F\u589E\u65BD\u94BE\u80A5','\u53F6\u83DC\u65BD\u6DE1\u80A5\uFF0C\u907F\u514D\u70E7\u6839','\u9AD8\u6E29\u505C\u6B62\u65BD\u80A5','\u79CB\u64AD\u524D\u65BD\u57FA\u80A5','\u751F\u957F\u65FA\u76DB\u671F\uFF0C\u6BCF\u5468\u65BD\u80A5','\u589E\u65BD\u78F7\u94BE\u80A5\u4FC3\u8FDB\u6210\u719F','\u6BD2\u751F\u957F\u671F\u65BD\u6DE1\u80A5','\u4F11\u7720\u671F\u51CF\u91CF\u6216\u505C\u6B62\u65BD\u80A5'],
+  pest:['\u5BA4\u5185\u68C0\u67E5\u866B\u5375','\u6CE2\u79CD\u524D\u6D88\u6BD2\u79CD\u5B50\uFF0C\u9632\u9ED1\u8150\u75C5','\u9AD8\u6E7F\u6CE8\u610F\u767D\u7C89\u75C5\uFF0C\u4FDD\u6301\u901A\u98CE','\u521D\u590F\u5F00\u59CB\u9632\u866B\uFF0C\u9EC4\u677F\u8BF1\u866B','\u9AD8\u6E29\u9AD8\u6E7F\u9632\u75C5\u866B\uFF0C\u53CA\u65F6\u4FEE\u526A','\u53F0\u98CE\u5B63\u68C0\u67E5\u690D\u7269\u4F24\u5BB3\uFF0C\u8865\u6551\u5012\u4F0F','\u9632\u65E5\u707E\u75C5\u548C\u9AD8\u6E29\u75C5\u5BB3','\u79CB\u74E2\u866B\u9AD8\u53D1\u671F\uFF0C\u5B89\u88C5\u9632\u866B\u7F51','\u667A\u80FD\u6811\u53EA\u9AD8\u53D1\uFF0C\u7528\u751F\u7269\u519C\u836F','\u5C11\u96E8\u5E72\u71E5\u9632\u7EA2\u8718\u86DB\uFF0C\u589E\u52A0\u6E7F\u5EA6','\u91D1\u5C5E\u866B\u9AD8\u53D1\uFF0C\u67E5\u68C0\u53F6\u80CC','\u5BD2\u6F6E\u9632\u51BB\u5BB3\uFF0C\u53EF\u8986\u76D6\u4FDD\u6E29'],
+  tips:['\u5229\u7528\u51AC\u5B63\u4F11\u8015\u671F\u6574\u7406\u571F\u58E4','\u7ACB\u6625\u524D\u540E\u6CE8\u610F\u5012\u6625\u5BD2\u6D41','\u6885\u96E8\u5B63\u524D\u642D\u5EFA\u906E\u96E8\u8BBE\u65BD','\u6CE8\u610F\u66F4\u6362\u5B63\u8282\u6027\u690D\u7269','\u9009\u62E9\u8010\u70ED\u54C1\u79CD\uFF0C\u6CE8\u610F\u63A9\u62A4','\u53F0\u98CE\u524D\u56FA\u5B9A\u82B1\u76C6\uFF0C\u9632\u98CE\u6297\u5012','\u9AD8\u6E29\u65F6\u53EF\u7528\u906E\u9633\u7F51\u964D\u6E29','\u79CB\u64AD\u524D\u5145\u5206\u6652\u571F\u6D88\u6BD2','\u79CB\u5B63\u662F\u6700\u4F73\u79CD\u690D\u5B63\u8282','\u6CE8\u610F\u9632\u5BD2\u6F6E\u6765\u4E34','\u53EF\u79CD\u690D\u8010\u5BD2\u6839\u83DC\u7C7B','\u4F11\u7720\u671F\u6574\u7406\u5DE5\u5177\uFF0C\u51C6\u5907\u6765\u5E74']
+ },
+ northwest:{
+  temps:['-15--5\u2103','-10-2\u2103','0-12\u2103','8-20\u2103','15-26\u2103','20-32\u2103','22-34\u2103','18-28\u2103','12-22\u2103','5-15\u2103','-5-5\u2103','-12-0\u2103'],
+  water:['\u5BA4\u5185\u6BCF7-10\u5929','\u5BA4\u5185\u6BCF5-7\u5929','\u6BCF4-5\u5929','\u6BCF3-4\u5929','\u6BCF2-3\u5929','\u6BCF2\u5929','\u6BCF1-2\u5929','\u6BCF2-3\u5929','\u6BCF3-4\u5929','\u6BCF4-5\u5929','\u5BA4\u5185\u6BCF5-7\u5929','\u5BA4\u5185\u6BCF7-10\u5929'],
+  fertilize:['\u5BA4\u5185\u82D7\u6728\u65BD\u8584\u80A5','\u5BA4\u5185\u80B2\u82D7\u65BD\u8584\u80A5\uFF0C\u907F\u514D\u70E7\u82D7','\u6237\u5916\u5F00\u59CB\u65BD\u57FA\u80A5\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u6237\u5916\u751F\u957F\u671F\u6BCF\u5468\u65BD\u6DB2\u80A5','\u5F00\u82B1\u524D\u589E\u65BD\u78F7\u80A5','\u679C\u5B9E\u671F\u589E\u65BD\u94BE\u80A5','\u9AD8\u6E29\u671F\u51CF\u91CF\u6216\u505C\u6B62\u65BD\u80A5','\u79CB\u64AD\u524D\u65BD\u8DB3\u57FA\u80A5','\u751F\u957F\u65FA\u76DB\u671F\u6BCF\u5468\u65BD\u80A5','\u589E\u65BD\u78F7\u94BE\u80A5\u4FC3\u8FDB\u6210\u719F','\u51AC\u5B63\u79FB\u5165\u5BA4\u5185\uFF0C\u51CF\u91CF\u65BD\u80A5','\u51AC\u5B63\u4F11\u7720\u671F\uFF0C\u505C\u6B62\u65BD\u80A5'],
+  pest:['\u5BA4\u5185\u9632\u6E7F\u75C5\u5BB3\uFF0C\u9002\u5F53\u901A\u98CE','\u6CE8\u610F\u79CD\u5B50\u53D1\u9709\u75C5','\u523D\u9A6C\u6D3B\u8DC3\uFF0C\u8425\u517B\u76C6\u68C0\u67E5','\u90C1\u91D1\u9999\u4E4B\u524D\u9000\u82D1\u68C0\u67E5','\u86F2\u9A6C\u9AD8\u53D1\u671F\uFF0C\u5730\u4E0B\u65BD\u836F','\u8757\u866B\u5165\u4FB5\uFF0C\u7528\u7EF4\u751F\u7D20\u5236\u5242','\u9A9A\u866B\u9AD8\u53D1\uFF0C\u7528\u4E8E\u4F4E\u6BD2\u4E73\u6CB9','\u6212\u98DF\u866B\u68C0\u67E5\u83B2\u85D5\u5B50','\u63A8\u82B1\u4E0E\u84DD\u8774\u8776\u6212\u514D\uFF0C\u84DD\u8774\u8776\u6212\u514D\u9EC4\u677F\u8BF1\u6740','\u5907\u6D77\u591C\u86B6\u866B\u5165\u5BA4\u4E3A\u5BB3','\u4F11\u7720\u671F\u6E05\u56ED\uFF0C\u51CF\u5C11\u75C5\u866B\u6E90','\u51AC\u5B63\u4F11\u7720\u671F\uFF0C\u6CE8\u610F\u5BA4\u5185\u68C0\u67E5'],
+  tips:['\u5229\u7528\u5927\u68DA\u6216\u5BA4\u5185\u79CD\u690D','\u63D0\u524D\u80B2\u82D7\uFF0C\u4E3A\u6625\u64AD\u505A\u51C6\u5907','\u7EC8\u971C\u524D\u4E0D\u8981\u8F6C\u79FB\u6237\u5916','\u6CE8\u610F\u9632\u98DE\u5EC3\u75C5\u5BB3','\u53EF\u642D\u5EFA\u5C0F\u578B\u906E\u9633\u68DA','\u6CE8\u610F\u5927\u96E8\u5012\u4F0F\u540E\u8865\u6551','\u9AD8\u6E29\u671F\u6CE8\u610F\u63A9\u62A4\u9632\u66B4\u6652','\u8D77\u8396\u98CE\u9632\u62A4','\u5145\u5206\u5229\u7528\u79CB\u5B63\u5149\u7167','\u53EF\u79CD\u690D\u8010\u5BD2\u6839\u83DC\u7C7B','\u5BA4\u5185\u79CD\u690D\u53EF\u4F7F\u7528\u8865\u5149\u706F','\u5BA4\u5185\u79CD\u690D\u53EF\u4F7F\u7528\u8865\u5149\u706F']
+ }
+};
+function getCalDetail(region,idx){var d=calDetail[region];if(!d)return null;return{temp:d.temps[idx],water:d.water[idx],fertilize:d.fertilize[idx],pest:d.pest[idx],tip:d.tips[idx]}};
+function showCalendar(region){var content=document.getElementById('calendar-content');var data=calendarDB[region];if(!data){content.innerHTML='<p style="color:var(--text-mid);text-align:center;padding:40px;">\u6570\u636E\u52A0\u8F7D\u4E2D...</p>';return}document.querySelectorAll('.cal-region-btn').forEach(function(btn){btn.classList.remove('active')});var activeBtn=document.querySelector('.cal-region-btn[data-region="'+region+'"]');if(activeBtn)activeBtn.classList.add('active');var html='<div style="background:var(--cream);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;"><strong style="color:var(--forest);">'+data.name+'</strong></div>';data.months.forEach(function(m,i){var extra=getCalDetail(region,i);html+='<div class="result-card" style="margin-bottom:12px;">';html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-weight:700;color:var(--forest);font-size:1.05rem;">'+m.m+'</span></div>';if(m.sow){html+='<div style="margin-bottom:8px;padding:10px 14px;background:rgba(124,182,157,0.08);border-radius:8px;border-left:3px solid var(--sage);"><span style="font-size:0.8rem;font-weight:600;color:var(--sage);">\uD83C\uDF31 \u64AD\u79CD\uFF1A</span><span style="font-size:0.9rem;color:var(--text-mid);">'+m.sow+'</span></div>'}if(m.harvest){html+='<div style="margin-bottom:8px;padding:10px 14px;background:rgba(212,168,83,0.08);border-radius:8px;border-left:3px solid var(--gold);"><span style="font-size:0.8rem;font-weight:600;color:var(--gold);">\uD83C\uDF3E \u6536\u83B7\uFF1A</span><span style="font-size:0.9rem;color:var(--text-mid);">'+m.harvest+'</span></div>'}if(m.note){html+='<div style="padding:10px 14px;background:rgba(196,120,91,0.06);border-radius:8px;font-size:0.85rem;color:var(--text-mid);margin-bottom:10px;">\uD83D\uDCAC '+m.note+'</div>'}if(extra){html+='<div id="cal-extra-'+i+'" style="display:none;margin-top:10px;padding-top:12px;border-top:1px dashed rgba(0,0,0,0.08);">';html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">';html+='<div style="padding:8px 10px;background:rgba(124,182,157,0.06);border-radius:6px;font-size:0.8rem;"><span style="color:var(--sage);font-weight:600;">\uD83C\uDF21 \u6E29\u5EA6\uFF1A</span><span style="color:var(--text-mid);">'+extra.temp+'</span></div>';html+='<div style="padding:8px 10px;background:rgba(124,182,157,0.06);border-radius:6px;font-size:0.8rem;"><span style="color:var(--sage);font-weight:600;">\uD83D\uDCA7 \u6D47\u6C34\uFF1A</span><span style="color:var(--text-mid);">'+extra.water+'</span></div>';html+='</div>';html+='<div style="padding:8px 10px;background:rgba(212,168,83,0.06);border-radius:6px;font-size:0.8rem;margin-bottom:6px;"><span style="color:var(--gold);font-weight:600;">\uD83E\uDD9A \u65BD\u80A5\uFF1A</span><span style="color:var(--text-mid);">'+extra.fertilize+'</span></div>';html+='<div style="padding:8px 10px;background:rgba(220,38,38,0.05);border-radius:6px;font-size:0.8rem;margin-bottom:6px;"><span style="color:#dc2626;font-weight:600;">\uD83D\uDC1B \u75C5\u866B\u5BB3\uFF1A</span><span style="color:var(--text-mid);">'+extra.pest+'</span></div>';html+='<div style="padding:8px 10px;background:rgba(196,120,91,0.06);border-radius:6px;font-size:0.8rem;"><span style="color:var(--terra);font-weight:600;">\uD83D\uDCA1 \u8D34\u58EB\uFF1A</span><span style="color:var(--text-mid);">'+extra.tip+'</span></div>';html+='</div>';html+='<div style="text-align:center;margin-top:8px;"><button id="cal-toggle-'+i+'" style="font-size:0.75rem;padding:4px 14px;border-radius:100px;border:1px solid rgba(124,182,157,0.3);background:rgba(124,182,157,0.08);color:var(--sage);cursor:pointer;transition:all 0.3s;" onclick="toggleMonthExtra('+i+',event)">&#x25BC; \u70B9\u51FB\u5C55\u5F00\u66F4\u591A</button></div>'}html+='</div>'});content.innerHTML=html;if(silverModeActive)addSpeakToResult(content);var reminder=document.getElementById('calendar-reminder');if(reminder)reminder.style.display='block'}
+function toggleMonthExtra(idx,evt){if(evt)evt.stopPropagation();var extra=document.getElementById('cal-extra-'+idx);var toggle=document.getElementById('cal-toggle-'+idx);if(!extra||!toggle)return;if(extra.style.display==='none'){extra.style.display='block';toggle.innerHTML='&#x25B2; \u6536\u8D77';toggle.style.background='rgba(212,168,83,0.12)';toggle.style.color='var(--gold)';toggle.style.borderColor='rgba(212,168,83,0.3)'}else{extra.style.display='none';toggle.innerHTML='&#x25BC; \u70B9\u51FB\u5C55\u5F00\u66F4\u591A';toggle.style.background='rgba(124,182,157,0.08)';toggle.style.color='var(--sage)';toggle.style.borderColor='rgba(124,182,157,0.3)'}}
+
+// Companion planting
+function showCompanion(){var main=document.getElementById('companion-main').value;var data=companionDB[main];var result=document.getElementById('companion-result');if(!data){result.innerHTML='<p>\u52A0\u8F7D\u4E2D...</p>';return}var html='<div><h4 style="color:var(--forest);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="font-size:1.2rem;">\u2714</span>\u6700\u4F73\u642D\u6863</h4>';data.good.forEach(function(c){html+='<div class="result-card" style="margin-bottom:10px;border-left:4px solid var(--sage);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><strong style="color:var(--forest);">'+c.plant+'</strong><span class="tag-green">'+c.mechanism+'</span></div><p style="font-size:0.85rem;color:var(--text-mid);">'+c.benefit+'</p><p style="font-size:0.75rem;color:var(--text-light);margin-top:4px;">\u1F4CD '+c.method+'</p></div>'});html+='</div><div><h4 style="color:var(--terra);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="font-size:1.2rem;">\u2716</span>\u907F\u514D\u642D\u914D</h4>';data.bad.forEach(function(c){html+='<div class="result-card" style="margin-bottom:10px;border-left:4px solid var(--terra);"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><strong style="color:var(--terra);">'+c.plant+'</strong><span class="tag-red">'+c.reason+'</span></div><p style="font-size:0.85rem;color:var(--text-mid);">'+c.benefit+'</p><p style="font-size:0.75rem;color:var(--text-light);margin-top:4px;">\u1F4CD '+c.method+'</p></div>'});html+='</div>';result.innerHTML=html;if(silverModeActive)addSpeakToResult(result)}
+
+
+function setCompanionExample(main){
+  document.getElementById('companion-main').value=main;
+  showCompanion();
+}
+// Show devices
+function showDevices(){var grid=document.getElementById('devices-grid');grid.innerHTML='';devicesDB.forEach(function(d,i){setTimeout(function(){var div=document.createElement('div');div.className='result-card';var brandsHtml='';if(d.brands&&d.brands.length){brandsHtml='<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.06);"><div style="font-size:0.75rem;font-weight:700;color:var(--forest);margin-bottom:8px;">🏆 热门品牌Top5</div><div style="display:flex;flex-direction:column;gap:6px;">';d.brands.forEach(function(b,idx){var rankColor=idx===0?'linear-gradient(135deg,var(--gold),var(--terra))':idx===1?'linear-gradient(135deg,#c0c0c0,#999)':idx===2?'linear-gradient(135deg,#cd7f32,#b87333)':'var(--sage)';brandsHtml+='<div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:'+rankColor+';color:#fff;font-size:0.65rem;font-weight:700;flex-shrink:0;">'+(idx+1)+'</span><span style="color:var(--text-dark);font-weight:600;">'+b.name+'</span><span style="color:var(--text-light);font-size:0.75rem;">'+b.model+'</span></div>'});brandsHtml+='</div></div>'}var shopsHtml='';if(d.shops&&d.shops.length){shopsHtml='<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">';d.shops.forEach(function(s){shopsHtml+='<span style="font-size:0.72rem;padding:3px 10px;border-radius:100px;background:rgba(124,182,157,0.08);color:var(--sage);border:1px solid rgba(124,182,157,0.15);">'+s+'</span>'});shopsHtml+='</div>'}div.innerHTML='<div style="text-align:center;"><div style="font-size:3rem;margin-bottom:12px;">'+d.icon+'</div><h4 style="color:var(--forest);margin-bottom:8px;">'+d.name+'</h4><div style="font-size:1.1rem;font-weight:700;color:'+d.color+';margin-bottom:8px;">'+d.price+'</div><span class="tag-green" style="margin-bottom:12px;">'+d.tag+'</span><p style="font-size:0.85rem;color:var(--text-mid);margin-top:12px;">'+d.desc+'</p>'+brandsHtml+shopsHtml+'</div>';grid.appendChild(div)},i*80)});if(silverModeActive)setTimeout(function(){addSpeakToResult(grid)},devicesDB.length*80+50)}
+
+// Show regrow
+function showRegrow(){var veg=document.getElementById('regrow-veg').value;var data=regrowDB[veg];var result=document.getElementById('regrow-result');if(!data){result.innerHTML='<p>\u52A0\u8F7D\u4E2D...</p>';return}var html='<div class="result-card" style="max-width:600px;margin:0 auto;"><div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;"><span style="font-size:3rem;">'+data.icon+'</span><div><h3 style="color:var(--forest);">'+data.name+'</h3><span class="tag-green">\u96F6\u5E9F\u5F03\u6C34\u57F9</span></div></div>';var steps=[{n:'\u2702',title:'\u5207\u5272',desc:data.cutMethod},{n:'\uD83C\uDF43',title:'\u5165\u74F6',desc:'\u5C06\u5207\u5272\u597D\u7684\u90E8\u5206\u653E\u5165\u6C34\u4E2D\uFF0C'+data.waterLevel},{n:'\uD83D\uDCA7',title:'\u6362\u6C34',desc:data.changeFreq},{n:'\uD83C\uDF3F',title:'\u6536\u83B7',desc:'\u53D1\u82BD'+data.sproutDays+'\uFF0C\u6536\u83B7'+data.harvestDays}];steps.forEach(function(s,i){var colors=['var(--sage)','var(--gold)','var(--terra)','var(--forest)'];html+='<div class="treatment-step" style="border-left-color:'+colors[i]+'"><div class="treatment-step-number" style="background:'+colors[i]+';font-size:1rem;">'+s.n+'</div><div><strong style="color:var(--forest);">\u6B65\u9AA4'+(i+1)+'\uFF1A'+s.title+'</strong><p style="font-size:0.85rem;color:var(--text-mid);margin-top:4px;">'+s.desc+'</p></div></div>'});html+='<div style="background:var(--cream);border-radius:12px;padding:16px;margin-top:16px;"><h4 style="color:var(--forest);font-size:0.9rem;margin-bottom:8px;">\uD83D\uDCA1 \u4E13\u4E1A\u8D34\u58EB</h4><p style="font-size:0.85rem;color:var(--text-mid);">'+data.tips+'</p></div>';html+='<div style="background:rgba(124,182,157,0.1);border-radius:12px;padding:16px;margin-top:12px;"><h4 style="color:var(--sage);font-size:0.9rem;margin-bottom:8px;">\uD83D\uDCB0 \u7701\u94B1\u51CF\u5E9F\u7EDF\u8BA1</h4><p style="font-size:0.85rem;color:var(--text-mid);">'+data.stats+'</p></div></div>';result.innerHTML=html;if(silverModeActive)addSpeakToResult(result)}
+
+
+function setRegrowExample(veg){
+  document.getElementById('regrow-veg').value=veg;
+  showRegrow();
+}
+// First aid cards
+function renderFirstaidCards(){var container=document.getElementById('firstaid-cards');var detail=document.getElementById('firstaid-detail');detail.style.display='none';container.innerHTML='';firstaidDB.forEach(function(item){var div=document.createElement('div');div.className='result-card';div.style.cursor='pointer';div.onclick=function(){showFirstaidDetail(item.id)};div.innerHTML='<div style="text-align:center;"><div style="font-size:2.5rem;margin-bottom:8px;">'+item.icon+'</div><h4 style="color:var(--forest);margin-bottom:6px;">'+item.title+'</h4><span class="tag-'+(item.severity==='low'?'green':item.severity==='mid'?'yellow':'red')+'">'+item.severityLabel+'</span><p style="font-size:0.75rem;color:var(--text-light);margin-top:8px;">\u70B9\u51FB\u67E5\u770B\u8BE6\u7EC6\u5EFA\u8BAE</p></div>';container.appendChild(div)});if(silverModeActive)addSpeakToResult(container)}
+function showFirstaidDetail(id){var detail=document.getElementById('firstaid-detail');var item=null;for(var i=0;i<firstaidDB.length;i++){if(firstaidDB[i].id===id){item=firstaidDB[i];break}}if(!item){detail.style.display='none';return}var html='<div class="result-card" style="max-width:700px;margin:0 auto;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:2.5rem;">'+item.icon+'</span><div><h3 style="color:var(--forest);font-size:1.15rem;">'+item.title+'</h3><span class="tag-'+(item.severity==='low'?'green':item.severity==='mid'?'yellow':'red')+'">'+item.severityLabel+'</span></div></div><div style="background:var(--cream);border-radius:12px;padding:16px;margin-bottom:20px;border-left:4px solid '+item.severityColor+'"><h4 style="color:var(--forest);font-size:0.9rem;margin-bottom:8px;">\uD83D\uDD0E \u5206\u6790</h4><p style="font-size:0.85rem;color:var(--text-mid);">'+item.analysis+'</p></div><h4 style="color:var(--forest);margin-bottom:12px;">\u1F4CB \u5EFA\u8BAE\u64CD\u4F5C</h4>';item.actions.forEach(function(a,i){var colors=['var(--sage)','var(--gold)','var(--terra)','var(--forest)'];html+='<div class="treatment-step" style="border-left-color:'+colors[i]+'"><div class="treatment-step-number" style="background:'+colors[i]+'">'+(i+1)+'</div><div><strong style="color:var(--forest);font-size:0.9rem;">'+a.step+'</strong><p style="font-size:0.85rem;color:var(--text-mid);margin-top:4px;">'+a.detail+'</p></div></div>'});html+='<div style="text-align:center;margin-top:16px;"><button class="btn-primary" onclick="document.getElementById(\"firstaid-detail\").style.display=\"none\"">\u2190 \u8FD4\u56DE\u6025\u6551\u5361\u7247</button></div></div>';detail.innerHTML=html;if(silverModeActive)addSpeakToResult(detail);detail.style.display='block'}
+
+// Diary - add entry and render timeline
+var diaryEntries=[
+{plant:'\uD83C\uDF45 \u5C0F\u756A\u8304 #1',action:'\uD83C\uDF3E \u6536\u83B7',content:'\u91C7\u6458\u4E866\u9897\u7EA2\u719F\u7684\u756A\u8304\uFF0C\u751C\u5EA6\u5F88\u9AD8\uFF01',date:'2026-07-14'},
+{plant:'\uD83E\uDD6C \u751F\u83DC',action:'\uD83D\uDCA7 \u6D47\u6C34',content:'\u89C2\u5BDF\u5230\u65B0\u53F6\u7247\u5DF2\u957F\u51FA3\u7247\uFF0C\u957F\u52BF\u826F\u597D',date:'2026-07-14'},
+{plant:'\uD83C\uDF3F \u8584\u8377',action:'\u2702 \u4FEE\u526A',content:'\u4FEE\u526A\u9876\u7AEF\u4FC3\u8FDB\u5206\u679D\uFF0C\u526A\u4E0B\u7684\u53F6\u5B50\u6652\u5E72\u53EF\u6CE1\u8336',date:'2026-07-13'},
+{plant:'\uD83C\uDF45 \u5C0F\u756A\u8304 #1',action:'\uD83E\uDD9A \u65BD\u80A5',content:'\u65BD\u4E86\u7A00\u91CA\u78F7\u94BE\u6DB2\u80A5\uFF0C\u4FC3\u8FDB\u679C\u5B9E\u53D1\u80B2',date:'2026-07-11'},
+{plant:'\uD83E\uDD6C \u751F\u83DC',action:'\uD83D\uDCA7 \u6D47\u6C34',content:'\u65E9\u6668\u6D47\u6C34\uFF0C\u571F\u58E4\u8868\u9762\u5DF2\u5E72\u71E5',date:'2026-07-12'},
+{plant:'\uD83C\uDF45 \u5C0F\u756A\u8304 #1',action:'\uD83D\uDCA7 \u6D47\u6C34',content:'\u89C1\u5E72\u89C1\u6E7F\uFF0C\u6D47\u900F\u6C34',date:'2026-07-10'}
+];
+function addDiaryEntry(){
+  var plant=document.getElementById('diary-plant');
+  var action=document.getElementById('diary-action');
+  var content=document.getElementById('diary-content');
+  var date=document.getElementById('diary-date');
+  if(!content.value.trim()){alert('\u8BF7\u8F93\u5165\u8BB0\u5F55\u5185\u5BB9');return}
+  var plantNames={tomato:'\uD83C\uDF45 \u5C0F\u756A\u8304',lettuce:'\uD83E\uDD6C \u751F\u83DC',cucumber:'\uD83E\uDD52 \u9EC4\u74DC',mint:'\uD83C\uDF3F \u8584\u8377',pepper:'\uD83C\uDF36 \u8FA3\u6912',basil:'\uD83C\uDF3F \u7F57\u52D2'};
+  var plantEl=plant.options[plant.selectedIndex];
+  var actionEl=action.options[action.selectedIndex];
+  diaryEntries.unshift({plant:plantEl.textContent,action:actionEl.textContent,content:content.value.trim(),date:date.value||'2026-07-14'});
+  var totalEl=document.getElementById('diary-total-count');if(totalEl)totalEl.textContent=parseInt(totalEl.textContent)+1;
+  renderDiaryTimeline();
+  content.value='';
+}
+function renderDiaryTimeline(){
+  var container=document.getElementById('diary-timeline-entries');if(!container)return;
+  var html='';
+  diaryEntries.slice(0,8).forEach(function(e,i){
+    var dotColors={'\uD83D\uDCA7':'var(--sage)','\uD83E\uDD9A':'var(--gold)','\u2702':'var(--terra)','\uD83C\uDF3E':'var(--forest)','\uD83D\uDCF8':'#2563eb','\uD83D\uDCDD':'var(--text-mid)'};
+    var color='\u4E3B\u8981\u7684\u7EFF\u8272';for(var k in dotColors){if(e.action.indexOf(k)!==-1){color=dotColors[k];break}}
+    html+='<div style="position:relative;padding:10px 0 10px 16px;border-bottom:1px solid rgba(0,0,0,0.04);">';
+    html+='<div style="position:absolute;left:-31px;top:14px;width:10px;height:10px;border-radius:50%;background:'+color+';border:2px solid var(--cream);"></div>';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:0.75rem;color:var(--text-light);">'+e.date+'</span><span style="font-size:0.7rem;padding:2px 8px;border-radius:100px;background:rgba(124,182,157,0.1);color:var(--sage);">'+e.action+'</span></div>';
+    html+='<div style="font-size:0.85rem;font-weight:600;color:var(--forest);margin-bottom:2px;">'+e.plant+'</div>';
+    html+='<div style="font-size:0.82rem;color:var(--text-mid);">'+e.content+'</div>';
+    html+='</div>';
+  });
+  container.innerHTML=html;
+}
+
+// Harvest calculator
+var harvestDB={
+  tomato:{name:'\u5C0F\u756A\u8304',emoji:'\uD83C\uDF45',cycle:{small:[70,90],medium:[60,80],large:[55,75],planter:[50,70]},yieldPerPlant:{small:'0.8-1.2kg',medium:'1.5-2.5kg',large:'2.5-4kg',planter:'3-5kg'},marketPrice:12,cost:{seed:3,soil:8,pot:15,fertilizer:5},tips:['\u5F00\u82B1\u540E\u63D0\u4F9B\u7A33\u5B9A\u6C34\u5206\uFF0C\u907F\u514D\u88C2\u679C','\u679C\u5B9E\u671F\u589E\u65BD\u78F7\u94BE\u80A5\u4FC3\u8FDB\u7740\u8272','\u6BCF\u5929\u65CB\u8F6C\u82B1\u76C6180\u00B0\uFF0C\u5747\u5300\u53D7\u5149']},
+  lettuce:{name:'\u751F\u83DC',emoji:'\uD83E\uDD6C',cycle:{small:[35,50],medium:[30,45],large:[28,42],planter:[25,40]},yieldPerPlant:{small:'150-250g',medium:'300-500g',large:'400-600g',planter:'600-900g'},marketPrice:6,cost:{seed:2,soil:5,pot:8,fertilizer:3},tips:['\u907F\u514D\u5348\u540E\u5F3A\u5149\u76F4\u5C04\uFF0C\u6563\u5C04\u5149\u5373\u53EF','\u65B0\u53F6\u53EF\u9010\u7247\u91C7\u6458\uFF0C\u4ECE\u5916\u5411\u5185\u6536\u83B7','\u6CE8\u610F\u9632\u8682\u866B\uFF0C\u53EF\u79CD\u5728\u7F57\u52D2\u65C1\u8FB9\u9A71\u866B']},
+  cucumber:{name:'\u9EC4\u74DC',emoji:'\uD83E\uDD52',cycle:{small:[55,75],medium:[50,70],large:[45,65],planter:[45,60]},yieldPerPlant:{small:'1.5-3\u6839',medium:'3-6\u6839',large:'5-10\u6839',planter:'8-15\u6839'},marketPrice:4,cost:{seed:3,soil:8,pot:15,fertilizer:5},tips:['\u9700\u642D\u67B6\u652F\u6491\uFF0C\u5229\u7528\u7EB1\u5E03\u6216\u7AF9\u7B4D','\u53CA\u65F6\u91C7\u6458\u4FC3\u8FDB\u65B0\u679C\u751F\u957F','\u6BCF\u5929\u5145\u8DB3\u6D47\u6C34\uFF0C\u679C\u671F\u9700\u6C34\u91CF\u52A0\u5927']},
+  chili:{name:'\u8FA3\u6912',emoji:'\uD83C\uDF36',cycle:{small:[65,85],medium:[60,80],large:[55,75],planter:[55,70]},yieldPerPlant:{small:'15-25\u4E2A',medium:'30-50\u4E2A',large:'50-80\u4E2A',planter:'60-100\u4E2A'},marketPrice:15,cost:{seed:3,soil:8,pot:12,fertilizer:5},tips:['\u559C\u70ED\uFF0C\u5145\u8DB3\u65E5\u71676\u5C0F\u65F6\u4EE5\u4E0A','\u5F00\u82B1\u671F\u8F7B\u8F7B\u6643\u52A8\u690D\u682A\u52A9\u7C89','\u91C7\u6458\u540E\u51B7\u85CF\u53EF\u4FDD\u5B582\u5468']},
+  eggplant:{name:'\u8304\u5B50',emoji:'\uD83C\uDF46',cycle:{small:[75,95],medium:[70,90],large:[65,85],planter:[60,80]},yieldPerPlant:{small:'2-4\u4E2A',medium:'5-8\u4E2A',large:'8-15\u4E2A',planter:'10-18\u4E2A'},marketPrice:8,cost:{seed:3,soil:10,pot:18,fertilizer:5},tips:['\u9700\u5927\u76C6\u3001\u6DF1\u571F\u3001\u5145\u8DB3\u5149\u7167','\u679C\u5B9E\u65F6\u591A\u65BD\u94BE\u80A5\u4FC3\u8FDB\u679C\u5B9E\u53D1\u80B2','\u53CA\u65F6\u91C7\u6458\uFF0C\u8FC7\u719F\u53D8\u786C\u5F71\u54CD\u53E3\u611F']},
+  bokchoy:{name:'\u5C0F\u767D\u83DC',emoji:'\uD83E\uDD6C',cycle:{small:[25,40],medium:[22,35],large:[20,32],planter:[20,30]},yieldPerPlant:{small:'200-350g',medium:'400-600g',large:'500-800g',planter:'800g-1.2kg'},marketPrice:5,cost:{seed:2,soil:5,pot:8,fertilizer:3},tips:['\u751F\u957F\u6781\u5FEB\uFF0C\u65B0\u624B\u5EFA\u7ACB\u4FE1\u5FC3\u9996\u9009','\u6BD4\u8F83\u8010\u5BD2\uFF0C\u79CB\u51AC\u5B63\u90FD\u53EF\u79CD\u690D','\u53EF\u591A\u6B21\u6536\u83B7\uFF0C\u7559\u6839\u90E8\u53EF\u518D\u53D1']},
+  mint:{name:'\u8584\u8377',emoji:'\uD83C\uDF3F',cycle:{small:[20,30],medium:[18,25],large:[15,22],planter:[15,20]},yieldPerPlant:{small:'\u6301\u7EED\u6536\u83B7',medium:'\u6301\u7EED\u6536\u83B7',large:'\u6301\u7EED\u6536\u83B7',planter:'\u6301\u7EED\u6536\u83B7'},marketPrice:10,cost:{seed:5,soil:5,pot:10,fertilizer:3},tips:['\u751F\u547D\u529B\u5F3A\uFF0C\u51E0\u4E4E\u4E0D\u9700\u7279\u522B\u7167\u987E','\u4FEE\u526A\u9876\u7AEF\u4FC3\u8FDB\u5206\u679D\uFF0C\u53EF\u65E0\u9650\u6269\u6563','\u6CE1\u8336\u3001\u9A71\u868A\u3001\u70D9\u83DC\u591A\u7528\u9014']},
+  basil:{name:'\u7F57\u52D2',emoji:'\uD83C\uDF3F',cycle:{small:[25,35],medium:[20,30],large:[18,25],planter:[18,22]},yieldPerPlant:{small:'\u6301\u7EED\u6536\u83B7',medium:'\u6301\u7EED\u6536\u83B7',large:'\u6301\u7EED\u6536\u83B7',planter:'\u6301\u7EED\u6536\u83B7'},marketPrice:15,cost:{seed:5,soil:5,pot:10,fertilizer:3},tips:['\u559C\u6E29\u6696\u5145\u8DB3\u65E5\u7167\uFF0C\u5145\u5206\u6D47\u6C34','\u53CA\u65F6\u6458\u5FC3\u82B1\u9632\u6B62\u5F00\u82B1\u8001\u5316','\u610F\u5927\u5229\u9762\u597D\u642D\u6863\uFF0C\u6C14\u5473\u9A71\u866B']}
+};
+function calculateHarvest(){
+  var plantKey=document.getElementById('harvest-plant').value;
+  var dateStr=document.getElementById('harvest-date').value;
+  var potSize=document.getElementById('harvest-pot').value;
+  var data=harvestDB[plantKey];
+  if(!data)return;
+  var seedDate=new Date(dateStr);
+  var cycle=data.cycle[potSize];
+  var minDays=cycle[0],maxDays=cycle[1];
+  var avgDays=Math.round((minDays+maxDays)/2);
+  var harvestDateMin=new Date(seedDate.getTime()+minDays*86400000);
+  var harvestDateMax=new Date(seedDate.getTime()+maxDays*86400000);
+  var today=new Date();
+  var elapsed=Math.floor((today-seedDate)/86400000);
+  var progress=Math.min(100,Math.max(0,Math.round(elapsed/avgDays*100)));
+  var cost=data.cost.seed+data.cost.soil+data.cost.pot+data.cost.fertilizer;
+  var saveAmt=Math.round((data.marketPrice*2-cost)*10)/10;
+  if(saveAmt<0)saveAmt=0;
+  document.getElementById('harvest-result').style.display='block';
+  document.getElementById('harvest-placeholder').style.display='none';
+  document.getElementById('harvest-days').textContent=minDays+'-'+maxDays;
+  document.getElementById('harvest-eta').textContent='\u9884\u8BA1\u6536\u83B7\uFF1A'+harvestDateMin.getMonth()+1+'/'+harvestDateMin.getDate()+' - '+harvestDateMax.getMonth()+1+'/'+harvestDateMax.getDate();
+  document.getElementById('harvest-yield').textContent=data.yieldPerPlant[potSize];
+  document.getElementById('harvest-yield-note').textContent=potSize==='planter'?'\u957F\u6761\u82B1\u7BB1\u4EA7\u91CF':'\u5355\u682A\u4EA7\u91CF';
+  document.getElementById('harvest-cost').textContent='\uFFE5'+cost;
+  document.getElementById('harvest-cost-detail').textContent='\u79CD\u5B50\uFFE5'+data.cost.seed+'+\u571F\u58E4\uFFE5'+data.cost.soil+'+\u82B1\u76C6\uFFE5'+data.cost.pot+'+\u80A5\u6599\uFFE5'+data.cost.fertilizer;
+  document.getElementById('harvest-save').textContent='\uFFE5'+saveAmt;
+  document.getElementById('harvest-progress-bar').style.width=progress+'%';
+  var stage=progress<10?'\u64AD\u79CD\u53D1\u82BD\u671F':progress<30?'\u5E7F\u5C3A\u751F\u957F\u671F':progress<60?'\u8425\u517B\u751F\u957F\u671F':progress<85?'\u73B0\u857E/\u5F00\u82B1\u671F':'\u6536\u83B7\u671F';
+  document.getElementById('harvest-progress-text').textContent='\u5DF2\u751F\u957F '+elapsed+' \u5929 / \u5E73\u5747\u5468\u671F '+avgDays+' \u5929 ('+progress+'%)\u3000\u5F53\u524D\u9636\u6BB5\uFF1A'+stage;
+  var tipsDiv=document.getElementById('harvest-tips');
+  tipsDiv.innerHTML='';
+  data.tips.forEach(function(t){tipsDiv.innerHTML+='<div>&#x2714; '+t+'</div>'});
+}
+
+// DOMContentLoaded init
+document.addEventListener('DOMContentLoaded',function(){showCalendar('south');showCompanion();showDevices();showRegrow();renderFirstaidCards();renderDiaryTimeline();initScrollAnimations()});
+
+// Enhanced scroll animations
+function initScrollAnimations(){var reveals=document.querySelectorAll('.reveal');reveals.forEach(function(el){el.classList.add('reveal-animate')});var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.remove('reveal-animate');entry.target.classList.add('visible')}})},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});reveals.forEach(function(el){observer.observe(el)})}
+
+// Smooth counter animation for hero stats
+function animateCounters(){var counters=document.querySelectorAll('.hero-stat-number');counters.forEach(function(counter){var target=parseInt(counter.textContent);if(isNaN(target))return;var suffix=counter.textContent.replace(/[0-9]/g,'');var current=0;var step=Math.ceil(target/30);var timer=setInterval(function(){current+=step;if(current>=target){current=target;clearInterval(timer)}counter.textContent=current+suffix},50)})}
+if(document.readyState==='complete'){setTimeout(animateCounters,500)}else{window.addEventListener('load',function(){setTimeout(animateCounters,500)})}
+
+// Keyboard accessibility for tabs
+document.addEventListener('keydown',function(e){if(e.key==='Tab'){document.body.classList.add('keyboard-nav')}})
+document.addEventListener('mousedown',function(){document.body.classList.remove('keyboard-nav')})
+
+// Add focus-visible styles dynamically
+var focusStyle=document.createElement('style');
+focusStyle.textContent='body.keyboard-nav *:focus{outline:3px solid var(--sage)!important;outline-offset:2px;border-radius:4px}.result-card:focus-visible{transform:translateY(-4px);box-shadow:0 0 0 3px var(--sage)}';
+document.head.appendChild(focusStyle);
+
+// Reduced motion support
+if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.style.setProperty('--animation-duration','0.01ms');var allAnimated=document.querySelectorAll('.leaf-particle,.hero::before');allAnimated.forEach(function(el){el.style.animation='none'})}
+</script>
+</html>
